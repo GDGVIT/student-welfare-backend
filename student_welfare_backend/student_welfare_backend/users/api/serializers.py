@@ -12,3 +12,13 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "url": {"view_name": "api:user-detail", "lookup_field": "username"}
         }
+
+
+
+class UserLoginSerializer(serializers.ModelSerializer):
+    # access_token = serializers.CharField()
+    # refresh_token = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ["username", "name", "is_faculty", "verified"]

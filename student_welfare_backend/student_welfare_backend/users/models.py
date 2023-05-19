@@ -1,6 +1,8 @@
+from datetime import datetime, timedelta
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 
@@ -32,6 +34,7 @@ class User(AbstractUser):
     first_name = None  # type: ignore
     last_name = None  # type: ignore
     tenure = models.CharField(_("Pass out year of the student"), blank=True, max_length=4, validators=[validate_tenure])
+    verified = models.BooleanField(default=False)
     is_faculty = models.BooleanField(_("User is faculty"), default=False)
 
     def get_absolute_url(self):
@@ -42,3 +45,36 @@ class User(AbstractUser):
 
         """
         return reverse("users:detail", kwargs={"Institute id": self.username})
+
+def get_expiry_date() -> datetime:
+    return timezone.now() + timedelta(minutes=5)
+
+class OTP(models.Model):
+    """
+    Model for storing OTPs
+    """
+
+    class Meta:
+        verbose_name = "OTP"
+        verbose_name_plural = "OTPs"
+        unique_together = ("user", "action")
+
+    def validate_otp_value(value):
+        if value.is_digit():
+            return value
+        else:
+            return ValidationError("Invalid value for OTP(cannot contain anything other than digits)!")
+
+    ACTION_CHOICES = [
+        ("verify_account", "Verifying account"),
+        ("sudo_access", "Sudo access")
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="otp")
+    action = models.CharField(max_length=255, choices=ACTION_CHOICES, default="verify_account")
+    value = models.CharField(max_length=6, validators=[validate_otp_value])
+    expiry_date = models.DateTimeField(default=get_expiry_date)
+
+    def reset_expiry_date(self):
+        self.expiry_date = get_expiry_date()
+        self.save()
