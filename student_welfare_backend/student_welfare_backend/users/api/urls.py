@@ -4,8 +4,10 @@ from student_welfare_backend.users.api.views import (
     LoginView,
     VerifyOTPView,
     RefreshOTPView,
-    Ping,
+    ResetPasswordView,
+    VerifyResetPasswordOTPView,
 )
+from rest_framework_simplejwt.views import TokenRefreshView
 
 app_name = "users"
 
@@ -14,5 +16,7 @@ urlpatterns = [
     path("login/", LoginView.as_view(), name="login"),
     path("verify_account/", VerifyOTPView.as_view(), name="verify_account"),
     path("refresh_otp/", RefreshOTPView.as_view(), name="refresh_otp"),
-    path("ping/", Ping.as_view(), name="ping"),
+    path("refresh_token/", TokenRefreshView.as_view(), name="refresh_token"),
+    path("reset_password/", ResetPasswordView.as_view(), name="reset_password"),
+    path("verify_reset_password_otp/", VerifyResetPasswordOTPView.as_view(), name="verify_reset_password_otp"),
 ]

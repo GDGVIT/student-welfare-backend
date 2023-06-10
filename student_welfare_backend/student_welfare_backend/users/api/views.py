@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.contrib.auth.hashers import make_password
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.decorators import action
@@ -10,12 +11,13 @@ from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateMode
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny
-
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from student_welfare_backend.users.models import OTP
 from student_welfare_backend.users.utils.otp import generate_otp
 from student_welfare_backend.users.api.serializers import UserLoginSerializer
+from student_welfare_backend.core.api.customs.permissions import IsDSW
 
 
 
@@ -196,17 +198,89 @@ class LoginView(APIView):
         serializer.refresh_token = str(refresh_token)
 
         return Response(
-            serializer.data,
+            {"data": serializer.data,
+             "access_token": str(refresh_token.access_token),
+             "refresh_token":str(refresh_token)
+             },
             status=HTTPStatus.OK
         )
     
-class Ping(APIView):
+
+class ResetPasswordView(APIView):
     permission_classes = [] 
     authentication_classes = []
 
     @staticmethod
-    def get(request):
+    def post(request):
+        email = request.data.get("email", None)
+
+        if email == None:
+            return Response({"detail": "Please enter email!"}, status=HTTPStatus.BAD_REQUEST)
+        
+        user = get_object_or_404(User, email=email)
+
+        if user.verified == False:
+            return Response({"detail": "Please verify your account first!"}, status=HTTPStatus.BAD_REQUEST)
+
+        if OTP.objects.filter(user=user).exists():
+            OTP.objects.get(user=user).delete()
+        otp = OTP.objects.create(
+            user=user,
+            value=generate_otp(),
+            action="reset_password"
+        )
+        message = f"OTP for resetting password is: {otp.value}. It will be active for 5 minutes."
+
+        send_mail(
+            f"SWC: {otp.get_action_display()} OTP",
+            message,
+            "noreply.swc@vit.ac.in",
+            recipient_list=[user.email],
+            fail_silently=True
+        )
+
         return Response(
-            {"detail": "Pong!"},
+            {"detail": "OTP sent to email! Please verify account."},
             status=HTTPStatus.OK
         )
+    
+
+class VerifyResetPasswordOTPView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    @staticmethod
+    def post(request):
+        email = request.query_params.get("email", None)
+        otp = request.data.get("otp")
+        new_password = request.data.get("new_password")
+
+        if email in [None, ""] or otp in [None, ""] or new_password in [None, ""]:
+            return Response({"detail": "Please enter all the fields!"}, status=HTTPStatus.BAD_REQUEST)
+        
+        user = get_object_or_404(User, email=email)
+        otp_object = get_object_or_404(OTP, user=user)
+
+        if otp==otp_object.value:
+            if otp_object.expiry_date > timezone.now():
+                user.password = make_password(new_password)
+                otp_object.delete()
+                user.save()
+            else:
+                return Response(
+                    {"detail": "OTP expired! Please generate a new OTP."},
+                    status=HTTPStatus.BAD_REQUEST
+                )
+        else:
+            return Response(
+                {"detail": "Wrong OTP value."},
+                status=HTTPStatus.BAD_REQUEST
+            )
+        
+        return Response(
+            {"detail": "Password reset successful!"},
+            status=HTTPStatus.OK
+        )
+
+        
+

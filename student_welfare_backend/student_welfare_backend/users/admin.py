@@ -20,6 +20,7 @@ class UserAdmin(auth_admin.UserAdmin):
             _("Permissions"),
             {
                 "fields": (
+                    "is_dsw",
                     "is_faculty",
                     "is_active",
                     "is_staff",

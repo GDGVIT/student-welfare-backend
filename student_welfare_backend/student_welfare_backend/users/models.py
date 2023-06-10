@@ -36,6 +36,7 @@ class User(AbstractUser):
     tenure = models.CharField(_("Pass out year of the student"), blank=True, max_length=4, validators=[validate_tenure])
     verified = models.BooleanField(default=False)
     is_faculty = models.BooleanField(_("User is faculty"), default=False)
+    is_dsw = models.BooleanField(_("User is DSW"), default=False)
 
     def get_absolute_url(self):
         """Get url for user's detail view.
@@ -67,7 +68,8 @@ class OTP(models.Model):
 
     ACTION_CHOICES = [
         ("verify_account", "Verifying account"),
-        ("sudo_access", "Sudo access")
+        ("sudo_access", "Sudo access"),
+        ("reset_password", "Reset password"),
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="otp")

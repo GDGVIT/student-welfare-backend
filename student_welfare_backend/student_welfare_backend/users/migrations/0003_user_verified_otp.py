@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('action', models.CharField(choices=[('verify_account', 'Verifying account'), ('sudo_access', 'Sudo access')], default='verify_account', max_length=255)),
                 ('value', models.CharField(max_length=6, validators=[student_welfare_backend.users.models.OTP.validate_otp_value])),
-                ('expiry_date', models.DateTimeField(default=student_welfare_backend.users.models.OTP.get_expiry_date)),
+                ('expiry_date', models.DateTimeField(default=student_welfare_backend.users.models.get_expiry_date)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='otp', to=settings.AUTH_USER_MODEL)),
             ],
             options={
