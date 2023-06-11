@@ -13,6 +13,7 @@ router.register("users", UserViewSet)
 
 urlpatterns = [
     re_path("users/", include("student_welfare_backend.users.api.urls")),
+    re_path("core/", include("student_welfare_backend.core.api.urls")),
 ]
 
 app_name = "api"
