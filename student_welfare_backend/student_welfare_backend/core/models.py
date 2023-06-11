@@ -16,7 +16,7 @@ class Club(models.Model):
         verbose_name = "Club"
         verbose_name_plural = "Clubs"
 
-    name = models.CharField(_("Name of club/chapter"), max_length=100)
+    name = models.CharField(_("Name of club/chapter"), max_length=100, unique=True)
     is_chapter = models.BooleanField(_("Chapter"), default=False)
     is_technical = models.BooleanField(_("Technical"), default=False)
 
@@ -73,14 +73,14 @@ class Event(models.Model):
         verbose_name_plural = "Events"
         unique_together = ("name", "organizing_body")
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     organizing_body = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="events")
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     venue = models.CharField(max_length=50)
     poster_link = models.CharField(max_length=255, null=True, blank=True)
-    event_coordinators = models.ManyToManyField(User, blank=True)
+    event_coordinators = models.JSONField(default=list)
 
     def __str__(self):
         return f"{self.name}"
