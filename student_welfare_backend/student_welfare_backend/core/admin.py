@@ -16,6 +16,7 @@ class ClubAdmin(admin.ModelAdmin):
     list_filter = ["is_chapter", "is_technical"]
 
 
+
 @admin.register(UserClubRelation)
 class UserClubRelationAdmin(admin.ModelAdmin):
     """Admin for UserClubRelation model."""
