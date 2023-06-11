@@ -7,30 +7,67 @@ import student_welfare_backend.users.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0002_user_is_faculty_user_phone_no_user_tenure_and_more'),
+        ("users", "0002_user_is_faculty_user_phone_no_user_tenure_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='verified',
+            model_name="user",
+            name="verified",
             field=models.BooleanField(default=False),
         ),
         migrations.CreateModel(
-            name='OTP',
+            name="OTP",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('action', models.CharField(choices=[('verify_account', 'Verifying account'), ('sudo_access', 'Sudo access')], default='verify_account', max_length=255)),
-                ('value', models.CharField(max_length=6, validators=[student_welfare_backend.users.models.OTP.validate_otp_value])),
-                ('expiry_date', models.DateTimeField(default=student_welfare_backend.users.models.get_expiry_date)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='otp', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "action",
+                    models.CharField(
+                        choices=[
+                            ("verify_account", "Verifying account"),
+                            ("sudo_access", "Sudo access"),
+                        ],
+                        default="verify_account",
+                        max_length=255,
+                    ),
+                ),
+                (
+                    "value",
+                    models.CharField(
+                        max_length=6,
+                        validators=[
+                            student_welfare_backend.users.models.OTP.validate_otp_value
+                        ],
+                    ),
+                ),
+                (
+                    "expiry_date",
+                    models.DateTimeField(
+                        default=student_welfare_backend.users.models.get_expiry_date
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="otp",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'OTP',
-                'verbose_name_plural': 'OTPs',
-                'unique_together': {('user', 'action')},
+                "verbose_name": "OTP",
+                "verbose_name_plural": "OTPs",
+                "unique_together": {("user", "action")},
             },
         ),
     ]

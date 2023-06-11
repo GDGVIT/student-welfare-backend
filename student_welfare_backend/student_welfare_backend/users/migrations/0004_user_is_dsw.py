@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0003_user_verified_otp'),
+        ("users", "0003_user_verified_otp"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='is_dsw',
-            field=models.BooleanField(default=False, verbose_name='User is DSW'),
+            model_name="user",
+            name="is_dsw",
+            field=models.BooleanField(default=False, verbose_name="User is DSW"),
         ),
     ]

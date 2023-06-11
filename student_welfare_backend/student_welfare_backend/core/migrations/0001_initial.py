@@ -6,7 +6,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,49 +14,120 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Club',
+            name="Club",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='Name of club/chapter')),
-                ('is_chapter', models.BooleanField(default=False, verbose_name='Chapter')),
-                ('is_technical', models.BooleanField(default=False, verbose_name='Technical')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=100, verbose_name="Name of club/chapter"
+                    ),
+                ),
+                (
+                    "is_chapter",
+                    models.BooleanField(default=False, verbose_name="Chapter"),
+                ),
+                (
+                    "is_technical",
+                    models.BooleanField(default=False, verbose_name="Technical"),
+                ),
             ],
             options={
-                'verbose_name': 'Club',
-                'verbose_name_plural': 'Clubs',
+                "verbose_name": "Club",
+                "verbose_name_plural": "Clubs",
             },
         ),
         migrations.CreateModel(
-            name='UserClubRelation',
+            name="UserClubRelation",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('role', models.CharField(choices=[('faculty_coordinator', 'Faculty Coordinator'), ('chairperson', 'Chair Person'), ('board_member', 'Board member'), ('member', 'member')], default='member', max_length=50)),
-                ('club', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.club')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "role",
+                    models.CharField(
+                        choices=[
+                            ("faculty_coordinator", "Faculty Coordinator"),
+                            ("chairperson", "Chair Person"),
+                            ("board_member", "Board member"),
+                            ("member", "member"),
+                        ],
+                        default="member",
+                        max_length=50,
+                    ),
+                ),
+                (
+                    "club",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="core.club"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'User Club relation',
-                'verbose_name_plural': 'User Club relations',
-                'unique_together': {('user', 'club')},
+                "verbose_name": "User Club relation",
+                "verbose_name_plural": "User Club relations",
+                "unique_together": {("user", "club")},
             },
         ),
         migrations.CreateModel(
-            name='Event',
+            name="Event",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('description', models.TextField()),
-                ('start_time', models.DateTimeField()),
-                ('end_time', models.DateTimeField()),
-                ('venue', models.CharField(max_length=50)),
-                ('poster_link', models.CharField(blank=True, max_length=255, null=True)),
-                ('event_coordinators', models.ManyToManyField(blank=True, to=settings.AUTH_USER_MODEL)),
-                ('organizing_body', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='events', to='core.club')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("description", models.TextField()),
+                ("start_time", models.DateTimeField()),
+                ("end_time", models.DateTimeField()),
+                ("venue", models.CharField(max_length=50)),
+                (
+                    "poster_link",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                (
+                    "event_coordinators",
+                    models.ManyToManyField(blank=True, to=settings.AUTH_USER_MODEL),
+                ),
+                (
+                    "organizing_body",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="events",
+                        to="core.club",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Event',
-                'verbose_name_plural': 'Events',
-                'unique_together': {('name', 'organizing_body')},
+                "verbose_name": "Event",
+                "verbose_name_plural": "Events",
+                "unique_together": {("name", "organizing_body")},
             },
         ),
     ]

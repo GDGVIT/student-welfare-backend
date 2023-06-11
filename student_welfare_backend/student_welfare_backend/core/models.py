@@ -23,15 +23,17 @@ class Club(models.Model):
     @property
     def chairperson(self):
         return UserClubRelation.objects.filter(club=self, role="chairperson").first()
-    
+
     @property
     def faculty_coordinator(self):
-        return UserClubRelation.objects.filter(club=self, role="faculty_coordinator").first()
-    
+        return UserClubRelation.objects.filter(
+            club=self, role="faculty_coordinator"
+        ).first()
+
     @property
     def board_members(self):
         return UserClubRelation.objects.filter(club=self, role="board_member").all()
-    
+
     @property
     def members(self):
         return UserClubRelation.objects.filter(club=self, role="member").all()
@@ -51,15 +53,19 @@ class UserClubRelation(models.Model):
         unique_together = ("user", "club")
 
     # Choices for club roles
-    CLUB_ROLE_CHOICES  = [
+    CLUB_ROLE_CHOICES = [
         ("faculty_coordinator", "Faculty Coordinator"),
         ("chairperson", "Chair Person"),
         ("board_member", "Board member"),
         ("member", "member"),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_club_relations")
-    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="user_club_relations")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="user_club_relations"
+    )
+    club = models.ForeignKey(
+        Club, on_delete=models.CASCADE, related_name="user_club_relations"
+    )
     role = models.CharField(choices=CLUB_ROLE_CHOICES, default="member", max_length=50)
 
 
@@ -75,7 +81,9 @@ class Event(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
-    organizing_body = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="events")
+    organizing_body = models.ForeignKey(
+        Club, on_delete=models.CASCADE, related_name="events"
+    )
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     venue = models.CharField(max_length=50)
@@ -84,6 +92,3 @@ class Event(models.Model):
 
     def __str__(self):
         return f"{self.name}"
-
-
-

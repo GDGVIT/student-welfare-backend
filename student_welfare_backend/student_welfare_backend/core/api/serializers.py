@@ -2,13 +2,11 @@ from rest_framework import serializers
 
 from student_welfare_backend.core.models import Event, Club, UserClubRelation
 
+
 class UserClubRelationSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserClubRelation
-        fields = [
-            "user",
-            "role"
-        ]
+        fields = ["user", "role"]
 
 
 class ClubSerializer(serializers.ModelSerializer):
@@ -38,12 +36,13 @@ class ClubDetailSerializer(serializers.ModelSerializer):
             "chairperson",
             "faculty_coordinator",
             "board_members",
-            "members"
+            "members",
         ]
 
 
 class EventListSerializer(serializers.ModelSerializer):
     organizing_body = ClubSerializer()
+
     class Meta:
         model = Event
         exclude = ["id", "description", "poster_link", "event_coordinators"]
@@ -51,6 +50,7 @@ class EventListSerializer(serializers.ModelSerializer):
 
 class EventDetailSerializer(serializers.ModelSerializer):
     organizing_body = ClubSerializer()
+
     class Meta:
         model = Event
         fields = "__all__"

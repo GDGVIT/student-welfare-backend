@@ -3,7 +3,10 @@ from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from student_welfare_backend.users.forms import UserAdminChangeForm, UserAdminCreationForm
+from student_welfare_backend.users.forms import (
+    UserAdminChangeForm,
+    UserAdminCreationForm,
+)
 from student_welfare_backend.users.models import OTP
 
 User = get_user_model()

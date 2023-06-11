@@ -14,7 +14,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 
 from student_welfare_backend.core.models import Event, Club
-from student_welfare_backend.core.api.serializers import EventListSerializer, EventDetailSerializer
+from student_welfare_backend.core.api.serializers import (
+    EventListSerializer,
+    EventDetailSerializer,
+)
 from student_welfare_backend.core.api.customs.pagination import CustomPagination
 from student_welfare_backend.core.api.customs.permissions import IsDSW
 
@@ -28,14 +31,19 @@ class EventViewSet(ReadOnlyModelViewSet):
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
     filterset_fields = ["organizing_body__name", "venue", "start_time", "end_time"]
     search_fields = ["name", "organizing_body__name", "venue", "start_time", "end_time"]
-    ordering_fields = ["name", "organizing_body__name", "venue", "start_time", "end_time"]
+    ordering_fields = [
+        "name",
+        "organizing_body__name",
+        "venue",
+        "start_time",
+        "end_time",
+    ]
     ordering = ["start_time"]
 
     def get_serializer_class(self):
         if self.action == "list":
             return EventListSerializer
         return EventDetailSerializer
-
 
 
 class EventAdminViewSet(ModelViewSet):
@@ -46,14 +54,20 @@ class EventAdminViewSet(ModelViewSet):
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, OrderingFilter]
     earch_fields = ["name", "organizing_body__name", "venue", "start_time", "end_time"]
-    ordering_fields = ["name", "organizing_body__name", "venue", "start_time", "end_time"]
+    ordering_fields = [
+        "name",
+        "organizing_body__name",
+        "venue",
+        "start_time",
+        "end_time",
+    ]
     ordering = ["start_time"]
 
     def get_serializer_class(self):
         if self.action == "list":
             return EventListSerializer
         return EventDetailSerializer
-        
+
 
 class EventBulkUploadView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -63,15 +77,22 @@ class EventBulkUploadView(APIView):
     def post(request):
         csv_file = request.FILES.get("file", None)
         if not csv_file:
-            return Response({"detail": "No file found"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "No file found"}, status=status.HTTP_400_BAD_REQUEST
+            )
         if not csv_file.name.endswith(".csv"):
-            return Response({"detail": "Invalid file type"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "Invalid file type"}, status=status.HTTP_400_BAD_REQUEST
+            )
         if csv_file.multiple_chunks():
-            return Response({"detail": "File too large"}, status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
-        
+            return Response(
+                {"detail": "File too large"},
+                status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            )
+
         responses = {
-            "success":[],
-            "failure":[],
+            "success": [],
+            "failure": [],
         }
 
         reader = csv.reader(csv_file.read().decode("utf-8").splitlines())
@@ -81,9 +102,11 @@ class EventBulkUploadView(APIView):
                 continue
             if Event.objects.filter(name=row[0]).exists():
                 continue
-            
+
             if not Club.objects.filter(name=row[2]).exists():
-                responses["failure"].append({"row": row[0], "detail": f"Club {row[2]} does not exist"})
+                responses["failure"].append(
+                    {"row": row[0], "detail": f"Club {row[2]} does not exist"}
+                )
                 continue
 
             event = Event.objects.create(
@@ -101,7 +124,8 @@ class EventBulkUploadView(APIView):
             if row[8] != "":
                 event.event_coordinators.append(row[8])
 
-            responses["success"].append({"row": row[0], "detail": f"Event {row[0]} created successfully"}) 
+            responses["success"].append(
+                {"row": row[0], "detail": f"Event {row[0]} created successfully"}
+            )
 
         return Response(responses, status=status.HTTP_201_CREATED)
-

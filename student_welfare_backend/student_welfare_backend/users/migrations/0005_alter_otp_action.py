@@ -4,15 +4,22 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0004_user_is_dsw'),
+        ("users", "0004_user_is_dsw"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='otp',
-            name='action',
-            field=models.CharField(choices=[('verify_account', 'Verifying account'), ('sudo_access', 'Sudo access'), ('reset_password', 'Reset password')], default='verify_account', max_length=255),
+            model_name="otp",
+            name="action",
+            field=models.CharField(
+                choices=[
+                    ("verify_account", "Verifying account"),
+                    ("sudo_access", "Sudo access"),
+                    ("reset_password", "Reset password"),
+                ],
+                default="verify_account",
+                max_length=255,
+            ),
         ),
     ]

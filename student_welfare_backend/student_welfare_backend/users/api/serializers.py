@@ -14,7 +14,6 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
 
-
 class UserLoginSerializer(serializers.ModelSerializer):
     # access_token = serializers.CharField()
     # refresh_token = serializers.CharField()

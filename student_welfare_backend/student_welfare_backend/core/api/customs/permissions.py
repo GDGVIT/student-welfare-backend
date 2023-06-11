@@ -5,7 +5,7 @@ from rest_framework.permissions import BasePermission
 class IsFaculty(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_faculty
-    
+
     def has_object_permission(self, request, view, obj):
         return request.user.is_faculty
 
@@ -14,6 +14,6 @@ class IsFaculty(BasePermission):
 class IsDSW(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_dsw
-    
+
     def has_object_permission(self, request, view, obj):
         return request.user.is_dsw

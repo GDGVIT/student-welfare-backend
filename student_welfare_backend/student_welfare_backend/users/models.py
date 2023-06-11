@@ -13,6 +13,7 @@ def validate_email(value):
     else:
         return ValidationError("Only VIT emails allowed.")
 
+
 def validate_tenure(value):
     if value.is_digit() and int(value) > 2022 and int(value) < 250:
         return value
@@ -29,11 +30,18 @@ class User(AbstractUser):
 
     #: First and last name do not cover name patterns around the globe
     name = models.CharField(_("Name of User"), blank=False, max_length=255)
-    email = models.EmailField(_("Email of User"), max_length=254, validators=[validate_email])
+    email = models.EmailField(
+        _("Email of User"), max_length=254, validators=[validate_email]
+    )
     phone_no = models.CharField(_("Phone number of User"), blank=False, max_length=15)
     first_name = None  # type: ignore
     last_name = None  # type: ignore
-    tenure = models.CharField(_("Pass out year of the student"), blank=True, max_length=4, validators=[validate_tenure])
+    tenure = models.CharField(
+        _("Pass out year of the student"),
+        blank=True,
+        max_length=4,
+        validators=[validate_tenure],
+    )
     verified = models.BooleanField(default=False)
     is_faculty = models.BooleanField(_("User is faculty"), default=False)
     is_dsw = models.BooleanField(_("User is DSW"), default=False)
@@ -47,8 +55,10 @@ class User(AbstractUser):
         """
         return reverse("users:detail", kwargs={"Institute id": self.username})
 
+
 def get_expiry_date() -> datetime:
     return timezone.now() + timedelta(minutes=5)
+
 
 class OTP(models.Model):
     """
@@ -64,7 +74,9 @@ class OTP(models.Model):
         if value.is_digit():
             return value
         else:
-            return ValidationError("Invalid value for OTP(cannot contain anything other than digits)!")
+            return ValidationError(
+                "Invalid value for OTP(cannot contain anything other than digits)!"
+            )
 
     ACTION_CHOICES = [
         ("verify_account", "Verifying account"),
@@ -73,7 +85,9 @@ class OTP(models.Model):
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="otp")
-    action = models.CharField(max_length=255, choices=ACTION_CHOICES, default="verify_account")
+    action = models.CharField(
+        max_length=255, choices=ACTION_CHOICES, default="verify_account"
+    )
     value = models.CharField(max_length=6, validators=[validate_otp_value])
     expiry_date = models.DateTimeField(default=get_expiry_date)
 

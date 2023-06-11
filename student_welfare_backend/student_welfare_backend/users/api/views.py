@@ -20,7 +20,6 @@ from student_welfare_backend.users.api.serializers import UserLoginSerializer
 from student_welfare_backend.core.api.customs.permissions import IsDSW
 
 
-
 from .serializers import UserSerializer
 
 User = get_user_model()
@@ -42,8 +41,8 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
 
 
 class RegistrationView(APIView):
-    permission_classes = [] 
-    authentication_classes = [] 
+    permission_classes = []
+    authentication_classes = []
 
     @staticmethod
     def post(request):
@@ -51,23 +50,24 @@ class RegistrationView(APIView):
         name = request.data.get("name", None)
         email = request.data.get("email", None)
         password = request.data.get("password", None)
-        phone_no = request.data.get("phone_no", None)      
+        phone_no = request.data.get("phone_no", None)
 
         if any([username, name, email, password, phone_no]) is None:
-            return Response({"detail": "Please fill in all the fields!"}, status=HTTPStatus.BAD_REQUEST)
-        
+            return Response(
+                {"detail": "Please fill in all the fields!"},
+                status=HTTPStatus.BAD_REQUEST,
+            )
+
         user = User.objects.create_user(
             username=username,
             name=name,
             email=email,
             password=password,
-            phone_no=phone_no
+            phone_no=phone_no,
         )
 
         otp = OTP.objects.create(
-            user=user,
-            value=generate_otp(),
-            action="verify_account"
+            user=user, value=generate_otp(), action="verify_account"
         )
         message = f"OTP for verifying account is: {otp.value}. It will be active for 5 minutes."
 
@@ -76,17 +76,17 @@ class RegistrationView(APIView):
             message,
             "noreply.swc@vit.ac.in",
             recipient_list=[user.email],
-            fail_silently=True
+            fail_silently=True,
         )
 
         return Response(
-            {"detail":"OTP sent to email! Please verify account."},
-            status=HTTPStatus.CREATED
+            {"detail": "OTP sent to email! Please verify account."},
+            status=HTTPStatus.CREATED,
         )
-        
+
 
 class RefreshOTPView(APIView):
-    permission_classes = [] 
+    permission_classes = []
     authentication_classes = []
 
     @staticmethod
@@ -109,17 +109,17 @@ class RefreshOTPView(APIView):
             message,
             "noreply.swc@vit.ac.in",
             recipient_list=[user.email],
-            fail_silently=True
+            fail_silently=True,
         )
 
         return Response(
             {"detail": "OTP re-sent to email! Please verify account."},
-            status=HTTPStatus.OK
+            status=HTTPStatus.OK,
         )
-    
+
 
 class VerifyOTPView(APIView):
-    permission_classes = [] 
+    permission_classes = []
     authentication_classes = []
 
     @staticmethod
@@ -133,7 +133,7 @@ class VerifyOTPView(APIView):
         user = get_object_or_404(User, email=email)
         otp_object = get_object_or_404(OTP, user=user)
 
-        if otp==otp_object.value:
+        if otp == otp_object.value:
             if otp_object.expiry_date > timezone.now():
                 user.verified = True
                 otp_object.delete()
@@ -141,14 +141,13 @@ class VerifyOTPView(APIView):
             else:
                 return Response(
                     {"detail": "OTP expired! Please generate a new OTP."},
-                    status=HTTPStatus.BAD_REQUEST
+                    status=HTTPStatus.BAD_REQUEST,
                 )
         else:
             return Response(
-                {"detail": "Wrong OTP value."},
-                status=HTTPStatus.BAD_REQUEST
+                {"detail": "Wrong OTP value."}, status=HTTPStatus.BAD_REQUEST
             )
-        
+
         # Generate JWT refresh token for the user
         refresh_token = RefreshToken.for_user(user)
 
@@ -157,12 +156,17 @@ class VerifyOTPView(APIView):
         # serializer.refresh_token = str(refresh_token)
 
         return Response(
-            {"data": serializer.data, "access_token": str(refresh_token.access_token), "refresh_token":str(refresh_token)},
-            status=HTTPStatus.OK
+            {
+                "data": serializer.data,
+                "access_token": str(refresh_token.access_token),
+                "refresh_token": str(refresh_token),
+            },
+            status=HTTPStatus.OK,
         )
 
+
 class LoginView(APIView):
-    permission_classes = [] 
+    permission_classes = []
     authentication_classes = []
 
     @staticmethod
@@ -173,21 +177,20 @@ class LoginView(APIView):
         if not email or not password:
             return Response(
                 {"detail": "Email and password are required."},
-                status=HTTPStatus.BAD_REQUEST
+                status=HTTPStatus.BAD_REQUEST,
             )
 
         user = get_object_or_404(User, email=email)
 
         if not user.check_password(password):
             return Response(
-                {"detail": "Incorrect password."},
-                status=HTTPStatus.BAD_REQUEST
+                {"detail": "Incorrect password."}, status=HTTPStatus.BAD_REQUEST
             )
-        
+
         if not user.verified:
             return Response(
                 {"detail": "Please verify your account to login."},
-                status=HTTPStatus.UNAUTHORIZED
+                status=HTTPStatus.UNAUTHORIZED,
             )
 
         # Generate JWT refresh token for the user
@@ -198,16 +201,17 @@ class LoginView(APIView):
         serializer.refresh_token = str(refresh_token)
 
         return Response(
-            {"data": serializer.data,
-             "access_token": str(refresh_token.access_token),
-             "refresh_token":str(refresh_token)
-             },
-            status=HTTPStatus.OK
+            {
+                "data": serializer.data,
+                "access_token": str(refresh_token.access_token),
+                "refresh_token": str(refresh_token),
+            },
+            status=HTTPStatus.OK,
         )
-    
+
 
 class ResetPasswordView(APIView):
-    permission_classes = [] 
+    permission_classes = []
     authentication_classes = []
 
     @staticmethod
@@ -215,19 +219,22 @@ class ResetPasswordView(APIView):
         email = request.data.get("email", None)
 
         if email == None:
-            return Response({"detail": "Please enter email!"}, status=HTTPStatus.BAD_REQUEST)
-        
+            return Response(
+                {"detail": "Please enter email!"}, status=HTTPStatus.BAD_REQUEST
+            )
+
         user = get_object_or_404(User, email=email)
 
         if user.verified == False:
-            return Response({"detail": "Please verify your account first!"}, status=HTTPStatus.BAD_REQUEST)
+            return Response(
+                {"detail": "Please verify your account first!"},
+                status=HTTPStatus.BAD_REQUEST,
+            )
 
         if OTP.objects.filter(user=user).exists():
             OTP.objects.get(user=user).delete()
         otp = OTP.objects.create(
-            user=user,
-            value=generate_otp(),
-            action="reset_password"
+            user=user, value=generate_otp(), action="reset_password"
         )
         message = f"OTP for resetting password is: {otp.value}. It will be active for 5 minutes."
 
@@ -236,14 +243,14 @@ class ResetPasswordView(APIView):
             message,
             "noreply.swc@vit.ac.in",
             recipient_list=[user.email],
-            fail_silently=True
+            fail_silently=True,
         )
 
         return Response(
             {"detail": "OTP sent to email! Please verify account."},
-            status=HTTPStatus.OK
+            status=HTTPStatus.OK,
         )
-    
+
 
 class VerifyResetPasswordOTPView(APIView):
     authentication_classes = []
@@ -256,12 +263,15 @@ class VerifyResetPasswordOTPView(APIView):
         new_password = request.data.get("new_password")
 
         if email in [None, ""] or otp in [None, ""] or new_password in [None, ""]:
-            return Response({"detail": "Please enter all the fields!"}, status=HTTPStatus.BAD_REQUEST)
-        
+            return Response(
+                {"detail": "Please enter all the fields!"},
+                status=HTTPStatus.BAD_REQUEST,
+            )
+
         user = get_object_or_404(User, email=email)
         otp_object = get_object_or_404(OTP, user=user)
 
-        if otp==otp_object.value:
+        if otp == otp_object.value:
             if otp_object.expiry_date > timezone.now():
                 user.password = make_password(new_password)
                 otp_object.delete()
@@ -269,18 +279,11 @@ class VerifyResetPasswordOTPView(APIView):
             else:
                 return Response(
                     {"detail": "OTP expired! Please generate a new OTP."},
-                    status=HTTPStatus.BAD_REQUEST
+                    status=HTTPStatus.BAD_REQUEST,
                 )
         else:
             return Response(
-                {"detail": "Wrong OTP value."},
-                status=HTTPStatus.BAD_REQUEST
+                {"detail": "Wrong OTP value."}, status=HTTPStatus.BAD_REQUEST
             )
-        
-        return Response(
-            {"detail": "Password reset successful!"},
-            status=HTTPStatus.OK
-        )
 
-        
-
+        return Response({"detail": "Password reset successful!"}, status=HTTPStatus.OK)

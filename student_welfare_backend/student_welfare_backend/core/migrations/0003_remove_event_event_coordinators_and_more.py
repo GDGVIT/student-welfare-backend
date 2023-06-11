@@ -4,19 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0002_alter_userclubrelation_club_and_more'),
+        ("core", "0002_alter_userclubrelation_club_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='event',
-            name='event_coordinators',
+            model_name="event",
+            name="event_coordinators",
         ),
         migrations.AddField(
-            model_name='event',
-            name='event_coordinators',
+            model_name="event",
+            name="event_coordinators",
             field=models.JSONField(default=list),
         ),
     ]

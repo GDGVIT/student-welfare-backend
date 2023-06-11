@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from student_welfare_backend.core.models import Club, Event, UserClubRelation
 
+
 # Register your models here.
 @admin.register(Club)
 class ClubAdmin(admin.ModelAdmin):
@@ -14,7 +15,6 @@ class ClubAdmin(admin.ModelAdmin):
         "is_technical",
     ]
     list_filter = ["is_chapter", "is_technical"]
-
 
 
 @admin.register(UserClubRelation)

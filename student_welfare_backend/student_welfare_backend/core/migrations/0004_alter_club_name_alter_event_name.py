@@ -4,20 +4,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0003_remove_event_event_coordinators_and_more'),
+        ("core", "0003_remove_event_event_coordinators_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='club',
-            name='name',
-            field=models.CharField(max_length=100, unique=True, verbose_name='Name of club/chapter'),
+            model_name="club",
+            name="name",
+            field=models.CharField(
+                max_length=100, unique=True, verbose_name="Name of club/chapter"
+            ),
         ),
         migrations.AlterField(
-            model_name='event',
-            name='name',
+            model_name="event",
+            name="name",
             field=models.CharField(max_length=100, unique=True),
         ),
     ]
