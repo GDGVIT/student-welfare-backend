@@ -21,3 +21,31 @@ class UserLoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["username", "name", "is_faculty", "verified"]
+
+
+
+class UserAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username", 
+            "name", 
+            "email", 
+            "phone_no",
+            "is_faculty",
+            "verified",
+            "tenure",
+            ]
+
+
+class UserAdminListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username", 
+            "name", 
+            "email", 
+            "verified",
+            ]

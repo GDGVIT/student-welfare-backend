@@ -1,3 +1,4 @@
+import csv
 from http import HTTPStatus
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
@@ -9,14 +10,16 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from django_filters.rest_framework import DjangoFilterBackend
 
 from student_welfare_backend.users.models import OTP
 from student_welfare_backend.users.utils.otp import generate_otp
-from student_welfare_backend.users.api.serializers import UserLoginSerializer
+from student_welfare_backend.users.api.serializers import UserLoginSerializer, UserAdminSerializer, UserAdminListSerializer
 from student_welfare_backend.core.api.customs.permissions import IsDSW
 
 
@@ -58,13 +61,18 @@ class RegistrationView(APIView):
                 status=HTTPStatus.BAD_REQUEST,
             )
 
-        user = User.objects.create_user(
-            username=username,
-            name=name,
-            email=email,
-            password=password,
-            phone_no=phone_no,
-        )
+        if user.objects.filter(username=username).exists():
+            user = User.objects.get(username=username)
+            user.password = make_password(password)
+            user.save()
+        else:
+            user = User.objects.create_user(
+                username=username,
+                name=name,
+                email=email,
+                password=password,
+                phone_no=phone_no,
+            )
 
         otp = OTP.objects.create(
             user=user, value=generate_otp(), action="verify_account"
@@ -287,3 +295,92 @@ class VerifyResetPasswordOTPView(APIView):
             )
 
         return Response({"detail": "Password reset successful!"}, status=HTTPStatus.OK)
+
+
+class UserAdminViewset(ModelViewSet):
+    queryset = User.objects.all()
+    permission_classes = [IsAuthenticated, IsDSW]
+    authentication_classes = [JWTAuthentication]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ["verified", "is_staff"]
+    search_fields = ["name", "email"]
+    ordering_fields = ["name", "email"]
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return UserAdminListSerializer
+        return UserAdminSerializer
+
+
+class UserBulkUploadView(APIView):
+    permission_classes = [IsAuthenticated, IsDSW]
+    authentication_classes = [JWTAuthentication]
+
+    @staticmethod
+    def post(request):
+        csv_file = request.FILES.get("file", None)
+        is_faculty = bool(request.data.get("is_faculty", None))
+
+        if not csv_file:
+            return Response(
+                {"error": "No file found"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        if not csv_file.name.endswith(".csv"):
+            return Response(
+                {"error": "Invalid file type"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        if csv_file.multiple_chunks():
+            return Response(
+                {"error": "File too large"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        file_data = csv.reader(csv_file.read().decode("utf-8").splitlines())
+        
+        responses = {
+            "success": [],
+            "failure": [],
+        }
+
+        reader = csv.reader(csv_file.read().decode("utf-8").splitlines())
+        next(reader)
+
+        # Columns - 
+        # 1. RegNo
+        # 2. Name
+        # 3. Email
+        # 4. Phone
+        # 5. is_faculty
+
+        for row in reader:
+            if len(row) != 5:
+                responses["failure"].append({
+                    "row": row[0], "detail": "Invalid number of columns."
+                })
+                continue
+
+            username = row[0]
+            name = row[1]
+            email = row[2]
+            phone = row[3]
+
+            if User.objects.filter(username=username).exists():
+                responses["failure"].append({
+                    "row": row[0], "detail": "User already exists."
+                })
+                continue
+
+            user = User.objects.create(
+                username=username,
+                name=name,
+                email=email,
+                phone=phone,
+                is_faculty=is_faculty,
+            )
+
+            user.set_unusable_password()
+
+            responses["success"].append({
+                "row": row[0], "detail": "User created successfully."
+            })
+
+        return Response(responses, status=status.HTTP_200_OK)

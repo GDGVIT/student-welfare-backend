@@ -1,4 +1,5 @@
 from django.urls import path
+from rest_framework.routers import DefaultRouter
 from student_welfare_backend.users.api.views import (
     RegistrationView,
     LoginView,
@@ -6,6 +7,8 @@ from student_welfare_backend.users.api.views import (
     RefreshOTPView,
     ResetPasswordView,
     VerifyResetPasswordOTPView,
+    UserAdminViewset,
+    UserBulkUploadView,
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 
@@ -23,4 +26,10 @@ urlpatterns = [
         VerifyResetPasswordOTPView.as_view(),
         name="verify_reset_password_otp",
     ),
+    path("admin/bulk_upload/", UserBulkUploadView.as_view(), name="bulk_upload"),
 ]
+
+# USER ADMIN
+user_admin_router = DefaultRouter()
+user_admin_router.register(r"admin", UserAdminViewset, basename="users_admin")
+urlpatterns += user_admin_router.urls
