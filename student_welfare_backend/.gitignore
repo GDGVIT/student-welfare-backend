@@ -280,3 +280,7 @@ student_welfare_backend/media/
 .env
 .envs/*
 !.envs/.local/
+
+# Credentials
+credentials/*
+!credentials/.gitkeep

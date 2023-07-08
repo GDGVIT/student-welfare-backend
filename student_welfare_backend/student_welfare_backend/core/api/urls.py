@@ -11,7 +11,7 @@ from student_welfare_backend.core.api.views.events import (
     EventAdminViewSet,
     EventBulkUploadView,
 )
-
+from student_welfare_backend.core.api.views.notifications import PushNotificationView
 
 # URL PATTERNS
 urlpatterns = [
@@ -27,6 +27,12 @@ urlpatterns = [
         "admin/events/bulk_upload/",
         EventBulkUploadView.as_view(),
         name="events_bulk_upload",
+    ),
+    # NOTIFICATIONS
+    path(
+        "admin/notifications/push/",
+        PushNotificationView.as_view(),
+        name="push_notification",
     ),
 ]
 
