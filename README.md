@@ -29,6 +29,7 @@
 	- [View logs](#view-logs)
 	- [View logs for a specific container](#view-logs-for-a-specific-container)
 	- [Run any command inside a container](#run-any-command-inside-a-container)
+- [API Documentation](#api-documentation)
 - [Developer](#developer)
 
 <br>
@@ -107,6 +108,11 @@ For local development, use `./sw.sh local` instead of `./sw.sh`
 > **NOTE** : The `sw.sh` script is a wrapper around the `docker-compose` command. You can use `docker-compose` instead of `./sw.sh` if you want to.
 
 
+
+<br>
+
+## API Documentation
+Postman API Documentations - [Student Welfare Backend](https://documenter.getpostman.com/view/23405999/2s946bCEtS)
 
 <br>
 
