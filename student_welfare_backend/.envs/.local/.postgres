@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=student_welfare_backend
+POSTGRES_USER=RQchJjMjGKYXrdixIvvsYGVvGjdRezeg
+POSTGRES_PASSWORD=XI80LvlnZ9I7BGI7aaWoWPRqdkcxRccVq5hc9yZpM7gJ6VUi1lk7A8yGeQ074MIe
