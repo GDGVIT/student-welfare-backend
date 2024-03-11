@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from student_welfare_backend.core.models import Event, Club, UserClubRelation
+from student_welfare_backend.core.models import Event, Club, UserClubRelation,Spotlight
 
 
 class UserClubRelationSerializer(serializers.ModelSerializer):
@@ -54,3 +54,14 @@ class EventDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = "__all__"
+
+class SpotlightListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Spotlight
+        exclude=["id"]
+        
+class SpotlightDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Spotlight
+        fields = "__all__"
+    
