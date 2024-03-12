@@ -97,7 +97,7 @@ class Event(models.Model):
     end_time = models.DateTimeField()
     venue = models.CharField(max_length=50)
     poster_link = models.CharField(max_length=255, null=True, blank=True)
-    event_coordinators = models.JSONField(default=list)
+    event_coordinators = models.JSONField(default=list, blank=True, null=True)
     status = models.CharField(
         max_length=50, choices=event_status, default="approval_pending"
     )
@@ -119,5 +119,3 @@ class Spotlight(models.Model):
     description = models.TextField()
     time = models.DateTimeField()
     hightlight_type=models.CharField(max_length=50)
-        
-        

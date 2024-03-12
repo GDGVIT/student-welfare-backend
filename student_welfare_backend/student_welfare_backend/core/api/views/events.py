@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -39,6 +40,35 @@ class EventViewSet(ReadOnlyModelViewSet):
         if self.action == "list":
             return EventListSerializer
         return EventDetailSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        # Filter based on query parameters
+        filter_params = self.request.query_params
+        if "upcoming" in filter_params:
+            queryset = self.get_upcoming_events()
+        elif "ongoing" in filter_params:
+            queryset = self.get_ongoing_events()
+        return queryset
+
+    def get_upcoming_events(self):
+        """
+        Returns upcoming events.
+        """
+        print("Upcoming events")
+        now = timezone.now()
+        upcoming_events = self.queryset.filter(start_time__gt=now)
+        return upcoming_events
+
+    def get_ongoing_events(self):
+        """
+        Returns ongoing events.
+        """
+        print("Ongoing events")
+        now = timezone.now()
+        ongoing_events = self.queryset.filter(start_time__lte=now, end_time__gte=now)
+        return ongoing_events
 
 
 class EventAdminViewSet(ModelViewSet):
