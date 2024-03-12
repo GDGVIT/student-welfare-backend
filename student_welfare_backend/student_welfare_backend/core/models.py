@@ -103,3 +103,20 @@ class Event(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class Spotlight(models.Model):
+    """
+    Model containing all the data of the articles that appear in spotlight
+    """
+    
+    class Meta:
+        verbose_name = "Spotlight Highlights"
+        verbose_name_plural = "Spotlight Highlights"
+        
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField()
+    time = models.DateTimeField()
+    hightlight_type=models.CharField(max_length=50)
+        
+        

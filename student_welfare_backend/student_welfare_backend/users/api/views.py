@@ -62,7 +62,7 @@ class RegistrationView(APIView):
                 status=HTTPStatus.BAD_REQUEST,
             )
 
-        if user.objects.filter(username=username).exists():
+        if User.objects.filter(username=username).exists():
             user = User.objects.get(username=username)
             user.password = make_password(password)
             user.save()
