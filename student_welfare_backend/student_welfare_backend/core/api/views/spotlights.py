@@ -12,8 +12,8 @@ from student_welfare_backend.core.api.serializers import (
     SpotlightListSerializer,
     SpotlightDetailSerializer,
 )
-from student_welfare_backend.core.api.customs.pagination import CustomPagination
-from student_welfare_backend.core.api.customs.permissions import IsDSW
+from student_welfare_backend.customs.pagination import CustomPagination
+from student_welfare_backend.customs.permissions import IsDSW
 
 class SpotlightViewSet(ReadOnlyModelViewSet):
     authentication_classes = []
