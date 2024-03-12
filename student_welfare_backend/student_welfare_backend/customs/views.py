@@ -12,7 +12,7 @@ from student_welfare_backend.csv_handler.exporter import CSVExporter
 
 class BaseAdminSWView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsDSW, IsADSW]
+    permission_classes = [IsAuthenticated, IsDSW | IsADSW]
 
 
 class BaseBulkUploadView(BaseAdminSWView):
@@ -40,6 +40,9 @@ class BaseBulkDownloadView(BaseAdminSWView):
     def get(self, request):
         exporter = CSVExporter(self.csv_type)
         csv = exporter.export_csv(request.query_params.get("filter", {}))
+
+        if type(csv) == dict:
+            return Response(csv, status=status.HTTP_400_BAD_REQUEST)
 
        # Create an HTTP response with CSV data
         response = HttpResponse(content_type='text/csv')
