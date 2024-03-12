@@ -27,8 +27,8 @@ urlpatterns = [
         VerifyResetPasswordOTPView.as_view(),
         name="verify_reset_password_otp",
     ),
-    path("admin/bulk_upload/", UserBulkUploadView.as_view(), name="bulk_upload"),
-    path("bulk/download", UserBulkDownloadView.as_view(), name="bulk_download"),
+    path("admin/users/bulk_upload/", UserBulkUploadView.as_view(), name="user_bulk_upload"),
+    path("admin/users/bulk_download/", UserBulkDownloadView.as_view(), name="user_bulk_download"),
 ]
 
 # USER ADMIN

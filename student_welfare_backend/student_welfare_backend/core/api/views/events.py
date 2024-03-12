@@ -15,7 +15,7 @@ from student_welfare_backend.core.api.serializers import (
 )
 from student_welfare_backend.customs.pagination import CustomPagination
 from student_welfare_backend.customs.permissions import IsDSW, IsADSW
-from student_welfare_backend.customs.views import BaseBulkUploadView
+from student_welfare_backend.customs.views import BaseBulkUploadView, BaseBulkDownloadView
 
 
 class EventViewSet(ReadOnlyModelViewSet):
@@ -95,4 +95,8 @@ class EventAdminViewSet(ModelViewSet):
 
 
 class EventBulkUploadView(BaseBulkUploadView):
+    csv_type = "event"
+
+
+class EventBulkDownloadView(BaseBulkDownloadView):
     csv_type = "event"

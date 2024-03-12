@@ -5,11 +5,13 @@ from student_welfare_backend.core.api.views.clubs import (
     ClubAdminViewSet,
     ClubsListView,
     ClubBulkUploadView,
+    ClubBulkDownloadView,
 )
 from student_welfare_backend.core.api.views.events import (
     EventViewSet,
     EventAdminViewSet,
     EventBulkUploadView,
+    EventBulkDownloadView,
 )
 from student_welfare_backend.core.api.views.spotlights import (
     SpotlightViewSet,
@@ -27,10 +29,20 @@ urlpatterns = [
         ClubBulkUploadView.as_view(),
         name="clubs_bulk_upload",
     ),
+    path(
+        "admin/clubs/bulk_download/",
+        ClubBulkDownloadView.as_view(),
+        name="clubs_bulk_download",
+    ),
     path(         
         "admin/events/bulk_upload/",
         EventBulkUploadView.as_view(),
         name="events_bulk_upload",
+    ),
+    path(
+        "admin/events/bulk_download/",
+        EventBulkDownloadView.as_view(),
+        name="events_bulk_download",
     ),
     # NOTIFICATIONS
     path(

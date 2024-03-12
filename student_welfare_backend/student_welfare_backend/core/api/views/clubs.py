@@ -16,7 +16,7 @@ from student_welfare_backend.core.api.serializers import (
 )
 from student_welfare_backend.customs.pagination import CustomPagination
 from student_welfare_backend.customs.permissions import IsDSW, IsADSW
-from student_welfare_backend.customs.views import BaseBulkUploadView
+from student_welfare_backend.customs.views import BaseBulkUploadView, BaseBulkDownloadView
 
 
 class ClubsListView(APIView):
@@ -73,4 +73,7 @@ class ClubAdminViewSet(ModelViewSet):
 
 
 class ClubBulkUploadView(BaseBulkUploadView):
+    csv_type = "club"
+
+class ClubBulkDownloadView(BaseBulkDownloadView):
     csv_type = "club"
