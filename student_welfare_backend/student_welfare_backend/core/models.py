@@ -74,6 +74,14 @@ class Event(models.Model):
     Model containing all data regarding events
     """
 
+    event_status = [
+        ("approval_pending", "Approval Pending"),
+        ("faculty_approved", "Faculty Approved"),
+        ("approved", "Approved"),
+        ("cancelled", "Cancelled"),
+        ("completed", "Completed"),
+    ]
+
     class Meta:
         verbose_name = "Event"
         verbose_name_plural = "Events"
@@ -89,6 +97,9 @@ class Event(models.Model):
     venue = models.CharField(max_length=50)
     poster_link = models.CharField(max_length=255, null=True, blank=True)
     event_coordinators = models.JSONField(default=list)
+    status = models.CharField(
+        max_length=50, choices=event_status, default="approval_pending"
+    )
 
     def __str__(self):
         return f"{self.name}"
