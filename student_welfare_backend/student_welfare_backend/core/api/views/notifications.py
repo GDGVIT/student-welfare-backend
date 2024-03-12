@@ -4,14 +4,14 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from student_welfare_backend.core.api.customs.permissions import IsDSW
+from student_welfare_backend.customs.permissions import IsDSW, IsADSW
 from student_welfare_backend.core.utils.notifications import send_notification
 
 
 
 class PushNotificationView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsDSW]
+    permission_classes = [IsAuthenticated, IsDSW, IsADSW]
 
     def post(self, request):
         title = request.data.get("title")

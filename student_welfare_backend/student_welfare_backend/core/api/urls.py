@@ -23,7 +23,7 @@ urlpatterns = [
         ClubBulkUploadView.as_view(),
         name="clubs_bulk_upload",
     ),
-    path(
+    path(         
         "admin/events/bulk_upload/",
         EventBulkUploadView.as_view(),
         name="events_bulk_upload",

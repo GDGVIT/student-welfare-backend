@@ -1,5 +1,3 @@
-import csv
-
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -16,8 +14,9 @@ from student_welfare_backend.core.api.serializers import (
     ClubSerializer,
     ClubDetailSerializer,
 )
-from student_welfare_backend.core.api.customs.pagination import CustomPagination
-from student_welfare_backend.core.api.customs.permissions import IsDSW
+from student_welfare_backend.customs.pagination import CustomPagination
+from student_welfare_backend.customs.permissions import IsDSW, IsADSW
+from student_welfare_backend.customs.views import BaseBulkUploadView
 
 
 class ClubsListView(APIView):
@@ -57,7 +56,7 @@ class ClubViewSet(ReadOnlyModelViewSet):
 
 class ClubAdminViewSet(ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsDSW]
+    permission_classes = [IsAuthenticated, IsDSW, IsADSW]
     queryset = Club.objects.all()
     serializer_class = ClubDetailSerializer
     pagination_class = CustomPagination
@@ -73,76 +72,5 @@ class ClubAdminViewSet(ModelViewSet):
         return ClubDetailSerializer
 
 
-class ClubBulkUploadView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsDSW]
-
-    @staticmethod
-    def post(request):
-        csv_file = request.FILES.get("file", None)
-
-        if not csv_file:
-            return Response(
-                {"error": "No file found"}, status=status.HTTP_400_BAD_REQUEST
-            )
-        if not csv_file.name.endswith(".csv"):
-            return Response(
-                {"error": "Invalid file type"}, status=status.HTTP_400_BAD_REQUEST
-            )
-        if csv_file.multiple_chunks():
-            return Response(
-                {"error": "File too large"}, status=status.HTTP_400_BAD_REQUEST
-            )
-
-        responses = {
-            "success": [],
-            "failure": [],
-        }
-
-        reader = csv.reader(csv_file.read().decode("utf-8").splitlines())
-        next(reader)
-
-        for row in reader:
-            if len(row) != 3:
-                responses["failure"].append(
-                    {"row": row, "error": "Invalid number of columns"}
-                )
-                continue
-
-            print(row)
-            name, is_chapter, is_technical = row
-
-            is_chapter = is_chapter.lower().capitalize()
-            is_technical = is_technical.lower().capitalize()
-
-            if not name:
-                responses["failure"].append(
-                    {"row": row, "detail": "Name cannot be empty"}
-                )
-                continue
-            if is_chapter not in ["True", "False"]:
-                responses["failure"].append(
-                    {"row": row, "detail": "Invalid value for is_chapter"}
-                )
-                continue
-            if is_technical not in ["True", "False"]:
-                responses["failure"].append(
-                    {"row": row, "detail": "Invalid value for is_technical"}
-                )
-                continue
-            if Club.objects.filter(name=name).exists():
-                responses["failure"].append(
-                    {"row": row, "detail": f"Club {name} already exists"}
-                )
-                continue
-
-            club = Club.objects.create(
-                name=name,
-                is_chapter=True if is_chapter == "True" else False,
-                is_technical=True if is_technical == "True" else False,
-            )
-            responses["success"].append(
-                {"row": row, "detail": f"Club {name} created successfully"}
-            )
-
-        return Response(responses, status=status.HTTP_200_OK)
+class ClubBulkUploadView(BaseBulkUploadView):
+    csv_type = "club"

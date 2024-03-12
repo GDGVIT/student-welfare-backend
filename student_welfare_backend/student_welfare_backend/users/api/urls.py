@@ -9,6 +9,7 @@ from student_welfare_backend.users.api.views import (
     VerifyResetPasswordOTPView,
     UserAdminViewset,
     UserBulkUploadView,
+    UserBulkDownloadView,
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 
@@ -27,6 +28,7 @@ urlpatterns = [
         name="verify_reset_password_otp",
     ),
     path("admin/bulk_upload/", UserBulkUploadView.as_view(), name="bulk_upload"),
+    path("bulk/download", UserBulkDownloadView.as_view(), name="bulk_download"),
 ]
 
 # USER ADMIN

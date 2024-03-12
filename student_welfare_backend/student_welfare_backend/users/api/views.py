@@ -20,10 +20,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from student_welfare_backend.users.models import OTP
 from student_welfare_backend.users.utils.otp import generate_otp
 from student_welfare_backend.users.api.serializers import UserLoginSerializer, UserAdminSerializer, UserAdminListSerializer
-from student_welfare_backend.core.api.customs.permissions import IsDSW
+from student_welfare_backend.customs.permissions import IsDSW, IsADSW
+from student_welfare_backend.customs.views import BaseBulkUploadView, BaseBulkDownloadView
 
 
-from .serializers import UserSerializer
+from student_welfare_backend.users.api.serializers import UserSerializer
 
 User = get_user_model()
 
@@ -299,7 +300,7 @@ class VerifyResetPasswordOTPView(APIView):
 
 class UserAdminViewset(ModelViewSet):
     queryset = User.objects.all()
-    permission_classes = [IsAuthenticated, IsDSW]
+    permission_classes = [IsAuthenticated, IsDSW, IsADSW]
     authentication_classes = [JWTAuthentication]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ["verified", "is_staff"]
@@ -312,75 +313,9 @@ class UserAdminViewset(ModelViewSet):
         return UserAdminSerializer
 
 
-class UserBulkUploadView(APIView):
-    permission_classes = [IsAuthenticated, IsDSW]
-    authentication_classes = [JWTAuthentication]
+class UserBulkUploadView(BaseBulkUploadView):
+    csv_type = "user"
 
-    @staticmethod
-    def post(request):
-        csv_file = request.FILES.get("file", None)
-        is_faculty = bool(request.data.get("is_faculty", None))
 
-        if not csv_file:
-            return Response(
-                {"error": "No file found"}, status=status.HTTP_400_BAD_REQUEST
-            )
-        if not csv_file.name.endswith(".csv"):
-            return Response(
-                {"error": "Invalid file type"}, status=status.HTTP_400_BAD_REQUEST
-            )
-        if csv_file.multiple_chunks():
-            return Response(
-                {"error": "File too large"}, status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        file_data = csv.reader(csv_file.read().decode("utf-8").splitlines())
-        
-        responses = {
-            "success": [],
-            "failure": [],
-        }
-
-        reader = csv.reader(csv_file.read().decode("utf-8").splitlines())
-        next(reader)
-
-        # Columns - 
-        # 1. RegNo
-        # 2. Name
-        # 3. Email
-        # 4. Phone
-        # 5. is_faculty
-
-        for row in reader:
-            if len(row) != 5:
-                responses["failure"].append({
-                    "row": row[0], "detail": "Invalid number of columns."
-                })
-                continue
-
-            username = row[0]
-            name = row[1]
-            email = row[2]
-            phone = row[3]
-
-            if User.objects.filter(username=username).exists():
-                responses["failure"].append({
-                    "row": row[0], "detail": "User already exists."
-                })
-                continue
-
-            user = User.objects.create(
-                username=username,
-                name=name,
-                email=email,
-                phone=phone,
-                is_faculty=is_faculty,
-            )
-
-            user.set_unusable_password()
-
-            responses["success"].append({
-                "row": row[0], "detail": "User created successfully."
-            })
-
-        return Response(responses, status=status.HTTP_200_OK)
+class UserBulkDownloadView(BaseBulkDownloadView):
+    csv_type = "user"
