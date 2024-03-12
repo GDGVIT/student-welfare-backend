@@ -45,7 +45,7 @@ class EventListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        exclude = ["id", "description", "poster_link", "event_coordinators"]
+        exclude = ["description", "event_coordinators"]
 
 
 class EventDetailSerializer(serializers.ModelSerializer):
@@ -58,7 +58,7 @@ class EventDetailSerializer(serializers.ModelSerializer):
 class SpotlightListSerializer(serializers.ModelSerializer):
     class Meta:
         model=Spotlight
-        exclude=["id"]
+        exclude=["description"]
         
 class SpotlightDetailSerializer(serializers.ModelSerializer):
     class Meta:

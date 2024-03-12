@@ -17,6 +17,7 @@ class Club(models.Model):
         verbose_name_plural = "Clubs"
 
     name = models.CharField(_("Name of club/chapter"), max_length=100, unique=True)
+    logo_link = models.CharField(_("Logo link"), max_length=255, null=True, blank=True)
     is_chapter = models.BooleanField(_("Chapter"), default=False)
     is_technical = models.BooleanField(_("Technical"), default=False)
 
