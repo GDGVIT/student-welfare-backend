@@ -314,6 +314,22 @@ class UserAdminViewset(ModelViewSet):
         if self.action == "list":
             return UserAdminListSerializer
         return UserAdminSerializer
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        # Filter based on query parameters
+        filter_params = self.request.query_params
+        if "sw_team" in filter_params:
+            queryset = self.get_sw_team()
+        return queryset
+
+    def get_sw_team(self):
+        """
+        Returns users with is_dsw and is_adsw
+        """
+        sw_team = self.queryset.filter(is_dsw=True, is_adsw=True)
+        return sw_team
 
 
 class UserBulkUploadView(BaseBulkUploadView):
