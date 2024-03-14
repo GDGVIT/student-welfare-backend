@@ -39,6 +39,7 @@ class UserAdmin(auth_admin.UserAdmin):
             {
                 "fields": (
                     "is_dsw",
+                    "is_adsw",
                     "is_faculty",
                     "is_active",
                     "is_staff",
