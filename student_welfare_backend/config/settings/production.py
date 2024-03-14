@@ -87,7 +87,7 @@ INSTALLED_APPS += ["anymail"]  # noqa F405
 # https://anymail.readthedocs.io/en/stable/esps
 EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
 ANYMAIL = {
-    "SENDINBLUE_API_KEY": env("BREVO_API_KEY"),
+    "BREVO_API_KEY": env("BREVO_API_KEY"),
 }
 
 
