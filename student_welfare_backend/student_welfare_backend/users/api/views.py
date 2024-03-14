@@ -1,7 +1,7 @@
-import csv
 from http import HTTPStatus
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
@@ -326,9 +326,9 @@ class UserAdminViewset(ModelViewSet):
 
     def get_sw_team(self):
         """
-        Returns users with is_dsw and is_adsw
+        Returns users with is_dsw or is_adsw
         """
-        sw_team = self.queryset.filter(is_dsw=True, is_adsw=True)
+        sw_team = self.queryset.filter(Q(is_dsw=True) | Q(is_adsw=True))
         return sw_team
 
 
