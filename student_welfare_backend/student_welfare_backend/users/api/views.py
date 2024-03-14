@@ -77,7 +77,7 @@ class RegistrationView(APIView):
 
         if OTP.objects.filter(user=user).exists():
             OTP.objects.get(user=user).delete()
-            
+
         otp = OTP.objects.create(
             user=user, value=generate_otp(), action="verify_account"
         )
@@ -86,7 +86,7 @@ class RegistrationView(APIView):
         send_mail(
             "SWC: Verify email OTP",
             message,
-            "noreply.swc@vit.ac.in",
+            "noreply.sw@dscvit.com",
             recipient_list=[user.email],
             fail_silently=True,
         )
@@ -119,7 +119,7 @@ class RefreshOTPView(APIView):
         send_mail(
             f"SWC: {otp.get_action_display()} OTP",
             message,
-            "noreply.swc@vit.ac.in",
+            "noreply.sw@dscvit.com",
             recipient_list=[user.email],
             fail_silently=True,
         )
@@ -253,7 +253,7 @@ class ResetPasswordView(APIView):
         send_mail(
             f"SWC: {otp.get_action_display()} OTP",
             message,
-            "noreply.swc@vit.ac.in",
+            "noreply.sw@dscvit.com",
             recipient_list=[user.email],
             fail_silently=True,
         )
