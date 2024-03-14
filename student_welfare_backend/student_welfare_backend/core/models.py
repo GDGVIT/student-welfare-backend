@@ -110,6 +110,11 @@ class Spotlight(models.Model):
     """
     Model containing all the data of the articles that appear in spotlight
     """
+
+    hightlight_type_choices = [
+        ("alert", "Alert"),
+        ("event", "Event"),
+    ]
     
     class Meta:
         verbose_name = "Spotlight Highlights"
@@ -118,4 +123,4 @@ class Spotlight(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     time = models.DateTimeField()
-    hightlight_type=models.CharField(max_length=50)
+    hightlight_type=models.CharField(max_length=50, choices=hightlight_type_choices, default="event")

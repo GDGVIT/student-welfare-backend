@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from student_welfare_backend.core.models import Club, Event, UserClubRelation
+from student_welfare_backend.core.models import Club, Event, Spotlight, UserClubRelation
 
 
 # Register your models here.
@@ -42,3 +42,16 @@ class EventAdmin(admin.ModelAdmin):
         "end_time",
     ]
     list_filter = ["organizing_body"]
+
+
+@admin.register(Spotlight)
+class SpotlightAdmin(admin.ModelAdmin):
+    """Admin for Spotlight model."""
+
+    list_display = [
+        "id",
+        "name",
+        "time",
+        "hightlight_type",
+    ]
+    list_filter = ["name", "hightlight_type"]

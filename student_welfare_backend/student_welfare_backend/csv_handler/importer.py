@@ -112,7 +112,7 @@ class CSVImporter:
                 username=row_data["reg_no"],
                 name=row_data["name"],
                 email=row_data["email"],
-                phone=row_data["phone"],
+                phone_no=row_data["phone"],
                 is_faculty=bool(row_data.get("is_faculty", False))
             )
             user.set_unusable_password()
