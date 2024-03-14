@@ -303,10 +303,10 @@ class VerifyResetPasswordOTPView(APIView):
 
 class UserAdminViewset(ModelViewSet):
     queryset = User.objects.all()
-    permission_classes = [IsAuthenticated, IsDSW, IsADSW]
+    permission_classes = [IsAuthenticated, IsDSW | IsADSW]
     authentication_classes = [JWTAuthentication]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ["verified", "is_staff"]
+    filterset_fields = ["verified", "is_adsw", "is_dsw", "is_faculty"]
     search_fields = ["name", "email"]
     ordering_fields = ["name", "email"]
 

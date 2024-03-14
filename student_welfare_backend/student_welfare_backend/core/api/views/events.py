@@ -73,7 +73,7 @@ class EventViewSet(ReadOnlyModelViewSet):
 
 class EventAdminViewSet(ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsDSW, IsADSW]
+    permission_classes = [IsAuthenticated, IsDSW | IsADSW]
     queryset = Event.objects.all()
     serializer_class = EventDetailSerializer
     pagination_class = CustomPagination

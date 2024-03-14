@@ -11,7 +11,7 @@ from student_welfare_backend.core.utils.notifications import send_notification
 
 class PushNotificationView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsDSW, IsADSW]
+    permission_classes = [IsAuthenticated, IsDSW | IsADSW]
 
     def post(self, request):
         title = request.data.get("title")

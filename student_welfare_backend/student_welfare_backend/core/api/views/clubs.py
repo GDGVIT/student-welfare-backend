@@ -56,7 +56,7 @@ class ClubViewSet(ReadOnlyModelViewSet):
 
 class ClubAdminViewSet(ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsDSW, IsADSW]
+    permission_classes = [IsAuthenticated, IsDSW | IsADSW]
     queryset = Club.objects.all()
     serializer_class = ClubDetailSerializer
     pagination_class = CustomPagination

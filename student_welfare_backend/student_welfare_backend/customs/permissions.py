@@ -13,16 +13,16 @@ class IsFaculty(BasePermission):
 # IsDSW field to see if user in DSW or not
 class IsDSW(BasePermission):
     def has_permission(self, request, view):
-        return request.user.is_dsw
+        return request.user.is_dsw | request.user.is_superuser
 
     def has_object_permission(self, request, view, obj):
-        return request.user.is_dsw
+        return request.user.is_dsw | request.user.is_superuser
 
 
 # IsADSW field to see if user in ADSW or not
 class IsADSW(BasePermission):
     def has_permission(self, request, view):
-        return request.user.is_adsw
+        return request.user.is_adsw | request.user.is_superuser
 
     def has_object_permission(self, request, view, obj):
-        return request.user.is_adsw
+        return request.user.is_adsw | request.user.is_superuser
