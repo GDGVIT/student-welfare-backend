@@ -75,6 +75,9 @@ class RegistrationView(APIView):
                 phone_no=phone_no,
             )
 
+        if OTP.objects.filter(user=user).exists():
+            OTP.objects.get(user=user).delete()
+            
         otp = OTP.objects.create(
             user=user, value=generate_otp(), action="verify_account"
         )
