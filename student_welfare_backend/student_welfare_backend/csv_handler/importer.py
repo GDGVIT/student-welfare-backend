@@ -38,7 +38,6 @@ EVENT_CSV_REQUIRED_FIELDS = [
 ]
 
 
-
 def validate_csv(csv_file):
     if not csv_file:
         return False, "No file found"
@@ -84,7 +83,7 @@ class CSVImporter:
     def __init__(self, csv_type):
         if csv_type not in CSV_TYPES:
             raise ValueError(f"Invalid CSV type '{csv_type}'")
-        
+
         if csv_type == "user":
             self.required_columns = USER_CSV_REQUIRED_FIELDS
             self.columns = USER_CSV_STANDARD_FIELDS
@@ -113,7 +112,7 @@ class CSVImporter:
                 name=row_data["name"],
                 email=row_data["email"],
                 phone_no=row_data["phone"],
-                is_faculty=bool(row_data.get("is_faculty", False))
+                is_faculty=bool(row_data.get("is_faculty", False)),
             )
             user.set_unusable_password()
 
@@ -132,7 +131,7 @@ class CSVImporter:
             club = Club.objects.create(
                 name=row_data["name"],
                 is_chapter=bool(row_data.get("is_chapter", False)),
-                is_technical=bool(row_data.get("is_technical", False))
+                is_technical=bool(row_data.get("is_technical", False)),
             )
 
             responses["success"].append({"row": row_data, "detail": "Club created successfully"})

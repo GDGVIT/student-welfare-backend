@@ -1,9 +1,7 @@
 from django.utils import timezone
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -78,7 +76,7 @@ class EventAdminViewSet(ModelViewSet):
     serializer_class = EventDetailSerializer
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, OrderingFilter]
-    earch_fields = ["name", "organizing_body__name", "venue", "start_time", "end_time"]
+    search_fields = ["name", "organizing_body__name", "venue", "start_time", "end_time"]
     ordering_fields = [
         "name",
         "organizing_body__name",

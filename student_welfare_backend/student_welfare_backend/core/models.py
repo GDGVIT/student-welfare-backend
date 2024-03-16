@@ -27,9 +27,7 @@ class Club(models.Model):
 
     @property
     def faculty_coordinator(self):
-        return UserClubRelation.objects.filter(
-            club=self, role="faculty_coordinator"
-        ).first()
+        return UserClubRelation.objects.filter(club=self, role="faculty_coordinator").first()
 
     @property
     def board_members(self):
@@ -61,12 +59,8 @@ class UserClubRelation(models.Model):
         ("member", "member"),
     ]
 
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="user_club_relations"
-    )
-    club = models.ForeignKey(
-        Club, on_delete=models.CASCADE, related_name="user_club_relations"
-    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_club_relations")
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="user_club_relations")
     role = models.CharField(choices=CLUB_ROLE_CHOICES, default="member", max_length=50)
 
 
@@ -90,17 +84,13 @@ class Event(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
-    organizing_body = models.ForeignKey(
-        Club, on_delete=models.CASCADE, related_name="events"
-    )
+    organizing_body = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="events")
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     venue = models.CharField(max_length=50)
     poster_link = models.CharField(max_length=255, null=True, blank=True)
     event_coordinators = models.JSONField(default=list, blank=True, null=True)
-    status = models.CharField(
-        max_length=50, choices=event_status, default="approval_pending"
-    )
+    status = models.CharField(max_length=50, choices=event_status, default="approval_pending")
 
     def __str__(self):
         return f"{self.name}"
@@ -115,12 +105,12 @@ class Spotlight(models.Model):
         ("alert", "Alert"),
         ("event", "Event"),
     ]
-    
+
     class Meta:
         verbose_name = "Spotlight Highlights"
         verbose_name_plural = "Spotlight Highlights"
-        
+
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     time = models.DateTimeField()
-    hightlight_type=models.CharField(max_length=50, choices=hightlight_type_choices, default="event")
+    hightlight_type = models.CharField(max_length=50, choices=hightlight_type_choices, default="event")

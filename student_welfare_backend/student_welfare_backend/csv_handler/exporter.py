@@ -24,18 +24,10 @@ CLUB_FIELDS = [
     "name",
     "is_chapter",
     "is_technical",
-    "logo_link",    
+    "logo_link",
 ]
 
-EVENT_FIELDS = [
-    "name",
-    "description",
-    "organizing_body__name",
-    "start_time",
-    "end_time",
-    "venue",
-    "event_coordinators"
-]
+EVENT_FIELDS = ["name", "description", "organizing_body__name", "start_time", "end_time", "venue", "event_coordinators"]
 
 
 # Create a csv in memory and return it as a file object
@@ -55,12 +47,13 @@ def write_csv(data, fields):
 def clean_headers(headers):
     return [header.replace("__", " ").replace("_", " ").title() for header in headers]
 
+
 # Get the data from the model and return it as a list of dictionaries
 def get_csv_data(model, filter, fields):
     def get_field_value(instance, field_name):
-        if '__' in field_name:
+        if "__" in field_name:
             # Split the field name to get the related field and attribute
-            related_field, related_attr = field_name.split('__')
+            related_field, related_attr = field_name.split("__")
             # Traverse the relationship and get the value of the related attribute
             related_obj = getattr(instance, related_field)
             if related_obj:
@@ -79,17 +72,22 @@ def get_csv_data(model, filter, fields):
     for data_model in data_models:
         data_entry = {}
         for field in fields:
-            data_entry[clean_headers([field,])[0]] = get_field_value(data_model, field)
+            data_entry[
+                clean_headers(
+                    [
+                        field,
+                    ]
+                )[0]
+            ] = get_field_value(data_model, field)
         data.append(data_entry)
     return data
 
 
 class CSVExporter:
-
     def __init__(self, csv_type):
         if csv_type not in CSV_TYPES:
             raise ValueError(f"Invalid CSV type '{csv_type}'")
-        
+
         if csv_type == "user":
             self.csv_fields = USER_FIELDS
             self.model = User
@@ -100,7 +98,6 @@ class CSVExporter:
             self.csv_fields = EVENT_FIELDS
             self.model = Event
 
-
     def export_csv(self, filter):
         try:
             data = get_csv_data(self.model, filter, self.csv_fields)
@@ -108,8 +105,3 @@ class CSVExporter:
             return {"detail": str(e)}
 
         return write_csv(data, self.csv_fields)
-
-    
-
-
-

@@ -12,11 +12,8 @@ firebase_app = firebase_admin.initialize_app(cred)
 @app.task(name="send_notification")
 def send_notification(title, body, topic, image_url=None):
     message = messaging.Message(
-        notification=messaging.Notification(title=title, 
-                                            body=body,
-                                            image=image_url
-                                            ),
-        topixc=f"/topics/{topic.replace(' ', '_').lower()}",
+        notification=messaging.Notification(title=title, body=body, image=image_url),
+        topic=f"/topics/{topic.replace(' ', '_').lower()}",
     )
     response = messaging.send(message)
     print("Successfully sent message:", response)

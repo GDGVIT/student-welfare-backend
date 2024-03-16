@@ -8,7 +8,6 @@ from student_welfare_backend.customs.permissions import IsDSW, IsADSW
 from student_welfare_backend.core.utils.notifications import send_notification
 
 
-
 class PushNotificationView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsDSW | IsADSW]
@@ -19,5 +18,4 @@ class PushNotificationView(APIView):
         topic = request.data.get("topic")
         image_url = request.data.get("image_url", None)
         send_notification.delay(title, body, topic, image_url)
-        return Response({"message": "Notification sent successfully"}, 
-                        status=status.HTTP_200_OK)
+        return Response({"message": "Notification sent successfully"}, status=status.HTTP_200_OK)

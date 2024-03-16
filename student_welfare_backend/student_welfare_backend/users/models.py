@@ -30,9 +30,7 @@ class User(AbstractUser):
 
     #: First and last name do not cover name patterns around the globe
     name = models.CharField(_("Name of User"), blank=False, max_length=255)
-    email = models.EmailField(
-        _("Email of User"), max_length=254, validators=[validate_email]
-    )
+    email = models.EmailField(_("Email of User"), max_length=254, validators=[validate_email])
     phone_no = models.CharField(_("Phone number of User"), blank=False, max_length=15)
     first_name = None  # type: ignore
     last_name = None  # type: ignore
@@ -75,9 +73,7 @@ class OTP(models.Model):
         if value.is_digit():
             return value
         else:
-            return ValidationError(
-                "Invalid value for OTP(cannot contain anything other than digits)!"
-            )
+            return ValidationError("Invalid value for OTP(cannot contain anything other than digits)!")
 
     ACTION_CHOICES = [
         ("verify_account", "Verifying account"),
@@ -86,9 +82,7 @@ class OTP(models.Model):
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="otp")
-    action = models.CharField(
-        max_length=255, choices=ACTION_CHOICES, default="verify_account"
-    )
+    action = models.CharField(max_length=255, choices=ACTION_CHOICES, default="verify_account")
     value = models.CharField(max_length=6, validators=[validate_otp_value])
     expiry_date = models.DateTimeField(default=get_expiry_date)
 

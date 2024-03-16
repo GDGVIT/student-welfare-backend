@@ -15,6 +15,7 @@ from student_welfare_backend.core.api.serializers import (
 from student_welfare_backend.customs.pagination import CustomPagination
 from student_welfare_backend.customs.permissions import IsDSW
 
+
 class SpotlightViewSet(ReadOnlyModelViewSet):
     authentication_classes = []
     permission_classes = []
@@ -22,7 +23,10 @@ class SpotlightViewSet(ReadOnlyModelViewSet):
     serializer_class = SpotlightDetailSerializer
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
-    filterset_fields = ["name", "time",]
+    filterset_fields = [
+        "name",
+        "time",
+    ]
     search_fields = ["name", "time"]
     ordering_fields = [
         "name",
@@ -43,7 +47,7 @@ class SpotlightAdminViewSet(ModelViewSet):
     serializer_class = SpotlightDetailSerializer
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, OrderingFilter]
-    earch_fields = ["name","time"]
+    earch_fields = ["name", "time"]
     ordering_fields = [
         "name",
         "time",
