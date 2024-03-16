@@ -19,7 +19,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from student_welfare_backend.users.models import OTP
 from student_welfare_backend.users.utils.otp import generate_otp
-from student_welfare_backend.users.api.serializers import UserLoginSerializer, UserAdminSerializer, UserAdminListSerializer
+from student_welfare_backend.users.api.serializers import (
+    UserLoginSerializer,
+    UserAdminSerializer,
+    UserAdminListSerializer,
+    SWTeamSerializer,
+)
 from student_welfare_backend.customs.permissions import IsDSW, IsADSW
 from student_welfare_backend.customs.views import BaseBulkUploadView, BaseBulkDownloadView
 
@@ -78,9 +83,7 @@ class RegistrationView(APIView):
         if OTP.objects.filter(user=user).exists():
             OTP.objects.get(user=user).delete()
 
-        otp = OTP.objects.create(
-            user=user, value=generate_otp(), action="verify_account"
-        )
+        otp = OTP.objects.create(user=user, value=generate_otp(), action="verify_account")
         message = f"OTP for verifying account is: {otp.value}. It will be active for 5 minutes."
 
         send_mail(
@@ -156,9 +159,7 @@ class VerifyOTPView(APIView):
                     status=HTTPStatus.BAD_REQUEST,
                 )
         else:
-            return Response(
-                {"detail": "Wrong OTP value."}, status=HTTPStatus.BAD_REQUEST
-            )
+            return Response({"detail": "Wrong OTP value."}, status=HTTPStatus.BAD_REQUEST)
 
         # Generate JWT refresh token for the user
         refresh_token = RefreshToken.for_user(user)
@@ -195,9 +196,7 @@ class LoginView(APIView):
         user = get_object_or_404(User, email=email)
 
         if not user.check_password(password):
-            return Response(
-                {"detail": "Incorrect password."}, status=HTTPStatus.BAD_REQUEST
-            )
+            return Response({"detail": "Incorrect password."}, status=HTTPStatus.BAD_REQUEST)
 
         if not user.verified:
             return Response(
@@ -231,9 +230,7 @@ class ResetPasswordView(APIView):
         email = request.data.get("email", None)
 
         if email == None:
-            return Response(
-                {"detail": "Please enter email!"}, status=HTTPStatus.BAD_REQUEST
-            )
+            return Response({"detail": "Please enter email!"}, status=HTTPStatus.BAD_REQUEST)
 
         user = get_object_or_404(User, email=email)
 
@@ -245,9 +242,7 @@ class ResetPasswordView(APIView):
 
         if OTP.objects.filter(user=user).exists():
             OTP.objects.get(user=user).delete()
-        otp = OTP.objects.create(
-            user=user, value=generate_otp(), action="reset_password"
-        )
+        otp = OTP.objects.create(user=user, value=generate_otp(), action="reset_password")
         message = f"OTP for resetting password is: {otp.value}. It will be active for 5 minutes."
 
         send_mail(
@@ -294,11 +289,21 @@ class VerifyResetPasswordOTPView(APIView):
                     status=HTTPStatus.BAD_REQUEST,
                 )
         else:
-            return Response(
-                {"detail": "Wrong OTP value."}, status=HTTPStatus.BAD_REQUEST
-            )
+            return Response({"detail": "Wrong OTP value."}, status=HTTPStatus.BAD_REQUEST)
 
         return Response({"detail": "Password reset successful!"}, status=HTTPStatus.OK)
+
+
+class SWTeamView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    @staticmethod
+    def get(request):
+        sw_team = User.objects.filter(Q(is_dsw=True) | Q(is_adsw=True))
+
+        serializer = SWTeamSerializer(sw_team, many=True)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
 
 
 class UserAdminViewset(ModelViewSet):
@@ -314,7 +319,7 @@ class UserAdminViewset(ModelViewSet):
         if self.action == "list":
             return UserAdminListSerializer
         return UserAdminSerializer
-    
+
     def get_queryset(self):
         queryset = super().get_queryset()
 
