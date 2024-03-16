@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from student_welfare_backend.core.models import Club, Event, Spotlight, UserClubRelation
+from student_welfare_backend.core.models import Club, Event, Spotlight, UserClubRelation, Newsletter
 
 
 # Register your models here.
@@ -56,3 +56,16 @@ class SpotlightAdmin(admin.ModelAdmin):
         "hightlight_type",
     ]
     list_filter = ["name", "hightlight_type"]
+
+
+@admin.register(Newsletter)
+class NewsletterAdmin(admin.ModelAdmin):
+    """Admin for Newsletter model."""
+
+    list_display = [
+        "id",
+        "year",
+        "month",
+        "link"
+    ]
+    list_filter = ["year", "month"]

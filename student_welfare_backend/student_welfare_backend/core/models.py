@@ -1,6 +1,7 @@
+import calendar
 from django.db import models
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import RegexValidator
 
 
 from student_welfare_backend.users.models import User
@@ -131,3 +132,23 @@ class Spotlight(models.Model):
     description = models.TextField()
     time = models.DateTimeField()
     hightlight_type = models.CharField(max_length=50, choices=hightlight_type_choices, default="event")
+
+
+class Newsletter(models.Model):
+    """
+    Model containing all the data of newsletters
+    """
+
+    month_names = [(month_name.lower(), month_name) for _, month_name in enumerate(calendar.month_name)][1:]
+
+    class Meta:
+        verbose_name = "Newsletter"
+        verbose_name_plural = "Newsletters"
+        unique_together = ("year", "month")
+
+    year = models.CharField(
+        max_length=4, validators=[RegexValidator(regex="^\d{4}$", message="Year must be 4 digits long")]
+    )
+    month = models.CharField(max_length=10, choices=month_names)
+    cover_page = models.CharField(max_length=255, null=True, blank=True)
+    link = models.CharField(max_length=255, null=True, blank=True)
