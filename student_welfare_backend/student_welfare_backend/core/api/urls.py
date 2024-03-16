@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 from student_welfare_backend.core.api.views.clubs import (
     ClubViewSet,
+    SpecialOrganizationsAPIView,
     ClubAdminViewSet,
     ClubsListView,
     ClubBulkUploadView,
@@ -23,6 +24,7 @@ from student_welfare_backend.core.api.views.notifications import PushNotificatio
 urlpatterns = [
     # LISTS
     path("clubs/titles/", ClubsListView.as_view(), name="clubs_titles"),
+    path("special_organizations/", SpecialOrganizationsAPIView.as_view(), name="special_organizations"),
     # BULK UPLOAD
     path(
         "admin/clubs/bulk_upload/",

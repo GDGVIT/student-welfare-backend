@@ -43,7 +43,7 @@ class ClubViewSet(ReadOnlyModelViewSet):
     serializer_class = ClubDetailSerializer
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
-    filterset_fields = ["is_technical", "is_chapter"]
+    filterset_fields = ["is_technical", "is_chapter", "type", "sub_type"]
     search_fields = ["name"]
     ordering_fields = ["name"]
     ordering = ["name"]
@@ -52,6 +52,38 @@ class ClubViewSet(ReadOnlyModelViewSet):
         if self.action == "list":
             return ClubSerializer
         return ClubDetailSerializer
+    
+
+class SpecialOrganizationsAPIView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    @staticmethod
+    def get(request):
+        organization_type = request.query_params.get("type", None)
+        if organization_type is None:
+            return Response(
+                {"detail": "Please provide a type parameter"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        
+        if organization_type not in ["student_welfare", "student_council", "greviance_cell"]:
+            return Response(
+                {"detail": "Invalid type parameter"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        
+        organizations = Club.objects.filter(type=organization_type).all()
+        if len(organizations) == 0:
+            return Response(
+                {"detail": "No such organizations found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        organization = organizations[0]
+        return Response(
+            ClubDetailSerializer(organization).data,
+            status=status.HTTP_200_OK,
+        )
 
 
 class ClubAdminViewSet(ModelViewSet):
