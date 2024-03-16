@@ -9,9 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["username", "name", "url", "is_faculty"]
 
-        extra_kwargs = {
-            "url": {"view_name": "api:user-detail", "lookup_field": "username"}
-        }
+        extra_kwargs = {"url": {"view_name": "api:user-detail", "lookup_field": "username"}}
 
 
 class UserLoginSerializer(serializers.ModelSerializer):
@@ -23,20 +21,19 @@ class UserLoginSerializer(serializers.ModelSerializer):
         fields = ["username", "name", "is_faculty", "verified"]
 
 
-
 class UserAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
             "id",
-            "username", 
-            "name", 
-            "email", 
+            "username",
+            "name",
+            "email",
             "phone_no",
             "is_faculty",
             "verified",
             "tenure",
-            ]
+        ]
 
 
 class UserAdminListSerializer(serializers.ModelSerializer):
@@ -44,8 +41,8 @@ class UserAdminListSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "id",
-            "username", 
-            "name", 
-            "email", 
+            "username",
+            "name",
+            "email",
             "verified",
-            ]
+        ]
