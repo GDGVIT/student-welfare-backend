@@ -12,6 +12,16 @@ class Club(models.Model):
     Model containing all data relating various clubs and chapters
     """
 
+    club_type_choices = [
+        ("student_welfare", "Student Welfare"),
+        ("student_council", "Student Council"),
+        ("club", "Club"),
+        ("chapter", "Chapter"),
+        ("team", "Team"),
+        ("greviance_cell", "Greviance Cell"),
+        ("other", "Other"),
+    ]
+
     class Meta:
         verbose_name = "Club"
         verbose_name_plural = "Clubs"
@@ -20,14 +30,20 @@ class Club(models.Model):
     logo_link = models.CharField(_("Logo link"), max_length=255, null=True, blank=True)
     is_chapter = models.BooleanField(_("Chapter"), default=False)
     is_technical = models.BooleanField(_("Technical"), default=False)
+    type = models.CharField(_("Type"), max_length=50, choices=club_type_choices, default="club")
+    sub_type = models.CharField(_("Sub Type"), max_length=50, null=True, blank=True)
 
     @property
     def chairperson(self):
-        return UserClubRelation.objects.filter(club=self, role="chairperson").first()
+        if UserClubRelation.objects.filter(club=self, role="chairperson").exists():
+            return UserClubRelation.objects.filter(club=self, role="chairperson").first()
+        return None
 
     @property
     def faculty_coordinator(self):
-        return UserClubRelation.objects.filter(club=self, role="faculty_coordinator").first()
+        if UserClubRelation.objects.filter(club=self, role="faculty_coordinator").exists():
+            return UserClubRelation.objects.filter(club=self, role="faculty_coordinator").first()
+        return None
 
     @property
     def board_members(self):
@@ -62,6 +78,7 @@ class UserClubRelation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_club_relations")
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="user_club_relations")
     role = models.CharField(choices=CLUB_ROLE_CHOICES, default="member", max_length=50)
+    position = models.CharField(max_length=100, null=True, blank=True)
 
 
 class Event(models.Model):

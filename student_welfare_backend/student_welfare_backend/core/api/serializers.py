@@ -1,12 +1,15 @@
 from rest_framework import serializers
 
 from student_welfare_backend.core.models import Event, Club, UserClubRelation, Spotlight
+from student_welfare_backend.users.api.serializers import UserLoginSerializer
 
 
 class UserClubRelationSerializer(serializers.ModelSerializer):
+    user = UserLoginSerializer()
+
     class Meta:
         model = UserClubRelation
-        fields = ["user", "role"]
+        fields = ["user", "role", "position"]
 
 
 class ClubSerializer(serializers.ModelSerializer):
@@ -21,10 +24,10 @@ class ClubSerializer(serializers.ModelSerializer):
 
 
 class ClubDetailSerializer(serializers.ModelSerializer):
-    chairperson = UserClubRelationSerializer
-    faculty_coordinator = UserClubRelationSerializer
-    board_members = UserClubRelationSerializer
-    members = UserClubRelationSerializer
+    chairperson = UserClubRelationSerializer()
+    faculty_coordinator = UserClubRelationSerializer()
+    board_members = UserClubRelationSerializer(many=True)
+    members = UserClubRelationSerializer(many=True)
 
     class Meta:
         model = Club
