@@ -26,8 +26,9 @@ class UserClubRelationAdmin(admin.ModelAdmin):
         "user",
         "club",
         "role",
+        "position"
     ]
-    list_filter = ["role"]
+    list_filter = ["role", "position"]
 
 
 @admin.register(Event)

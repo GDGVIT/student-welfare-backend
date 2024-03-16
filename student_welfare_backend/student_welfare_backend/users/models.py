@@ -53,6 +53,9 @@ class User(AbstractUser):
 
         """
         return reverse("users:detail", kwargs={"Institute id": self.username})
+    
+    def __str__(self):
+        return self.username + " - " + self.name
 
 
 def get_expiry_date() -> datetime:
