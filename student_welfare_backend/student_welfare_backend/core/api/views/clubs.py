@@ -73,15 +73,14 @@ class SpecialOrganizationsAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         
-        organizations = Club.objects.filter(type=organization_type).all()
+        organizations = Club.objects.filter(type=organization_type).order_by("-name").all()
         if len(organizations) == 0:
             return Response(
                 {"detail": "No such organizations found"},
                 status=status.HTTP_404_NOT_FOUND,
             )
-        organization = organizations[0]
         return Response(
-            ClubDetailSerializer(organization).data,
+            ClubDetailSerializer(organizations, many=True).data,
             status=status.HTTP_200_OK,
         )
 

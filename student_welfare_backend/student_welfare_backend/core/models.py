@@ -20,6 +20,7 @@ class Club(models.Model):
         ("chapter", "Chapter"),
         ("team", "Team"),
         ("greviance_cell", "Greviance Cell"),
+        ("counseling_division", "Counseling Division"),
         ("other", "Other"),
     ]
 
@@ -152,3 +153,37 @@ class Newsletter(models.Model):
     month = models.CharField(max_length=10, choices=month_names)
     cover_page = models.CharField(max_length=255, null=True, blank=True)
     link = models.CharField(max_length=255, null=True, blank=True)
+
+
+class SpecialFile(models.Model):
+    """
+    Model containing all the data of special files
+    """
+
+    file_type_options = [
+        ("events", "Events"),
+        ("program_representatives", "Program Representatives"),
+    ]
+
+    class Meta:
+        verbose_name = "Special File"
+        verbose_name_plural = "Special Files"
+
+    year = models.CharField(
+        max_length=4, validators=[RegexValidator(regex="^\d{4}$", message="Year must be 4 digits long")]
+    )
+    type = models.CharField(max_length=100, choices=file_type_options)
+    file_link = models.CharField(max_length=255)
+
+
+class FAQ(models.Model):
+    """
+    Model containing all the data of FAQs
+    """
+
+    class Meta:
+        verbose_name = "FAQ"
+        verbose_name_plural = "FAQs"
+
+    question = models.CharField(max_length=255)
+    answer = models.TextField()

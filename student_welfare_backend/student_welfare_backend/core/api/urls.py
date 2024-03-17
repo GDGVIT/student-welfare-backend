@@ -22,6 +22,14 @@ from student_welfare_backend.core.api.views.newsletters import (
     NewsletterViewSet,
     NewsletterAdminViewSet,
 )
+from student_welfare_backend.core.api.views.faqs import (
+    FAQViewSet, 
+    FAQAdminViewSet,
+)
+from student_welfare_backend.core.api.views.special_files import (
+    SpecialFileViewSet,
+    SpecialFileAdminViewSet,
+)
 from student_welfare_backend.core.api.views.notifications import PushNotificationView
 
 # URL PATTERNS
@@ -97,3 +105,23 @@ urlpatterns += newsletter_router.urls
 newsletter_admin_router = DefaultRouter()
 newsletter_admin_router.register(r"admin/newsletters", NewsletterAdminViewSet, basename="newsletters_admin")
 urlpatterns += newsletter_admin_router.urls
+
+
+# FAQ
+faq_router = DefaultRouter()
+faq_router.register(r"faqs", FAQViewSet, basename="faqs")
+urlpatterns += faq_router.urls
+
+faq_admin_router = DefaultRouter()
+faq_admin_router.register(r"admin/faqs", FAQAdminViewSet, basename="faqs_admin")
+urlpatterns += faq_admin_router.urls
+
+
+# SPECIAL FILES
+special_file_router = DefaultRouter()
+special_file_router.register(r"special_files", SpecialFileViewSet, basename="special_files")
+urlpatterns += special_file_router.urls
+
+special_file_admin_router = DefaultRouter()
+special_file_admin_router.register(r"admin/special_files", SpecialFileAdminViewSet, basename="special_files_admin")
+urlpatterns += special_file_admin_router.urls

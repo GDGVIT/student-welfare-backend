@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from student_welfare_backend.core.models import Club, Event, Spotlight, UserClubRelation, Newsletter
+from student_welfare_backend.core.models import Club, Event, Spotlight, UserClubRelation, Newsletter, FAQ, SpecialFile
 
 
 # Register your models here.
@@ -69,3 +69,32 @@ class NewsletterAdmin(admin.ModelAdmin):
         "link"
     ]
     list_filter = ["year", "month"]
+
+
+@admin.register(FAQ)
+class FAQAdmin(admin.ModelAdmin):
+    """Admin for FAQ model."""
+
+    list_display = [
+        "id",
+        "question",
+        "answer"
+    ]
+    search_fields = ["question", "answer"]
+
+
+@admin.register(SpecialFile)
+class SpecialFileAdmin(admin.ModelAdmin):
+    """Admin for SpecialFile model."""
+
+    list_display = [
+        "id",
+        "year",
+        "type",
+        "file_link"
+    ]
+    list_filter = ["year", "type"]
+    search_fields = ["year", "type"]
+    ordering = ["-year"]
+
+

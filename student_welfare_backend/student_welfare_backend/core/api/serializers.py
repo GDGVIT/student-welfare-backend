@@ -1,6 +1,14 @@
 from rest_framework import serializers
 
-from student_welfare_backend.core.models import Event, Club, UserClubRelation, Spotlight, Newsletter
+from student_welfare_backend.core.models import (
+    Event, 
+    Club, 
+    UserClubRelation, 
+    Spotlight, 
+    Newsletter, 
+    FAQ, 
+    SpecialFile,
+)
 from student_welfare_backend.users.api.serializers import UserLoginSerializer
 
 
@@ -74,4 +82,16 @@ class SpotlightDetailSerializer(serializers.ModelSerializer):
 class NewsletterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Newsletter
+        fields = "__all__"
+
+
+class FAQSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FAQ
+        fields = "__all__"
+
+
+class SpecialFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpecialFile
         fields = "__all__"
