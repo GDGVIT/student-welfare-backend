@@ -39,3 +39,12 @@ class NewsletterAdminViewSet(ModelViewSet):
     search_fields = ["year", "month"]
     ordering_fields = ["year", "month"]
     ordering = ["-year", "-month"]
+
+
+
+class NewsletterBulkUploadView(BaseBulkUploadView):
+    csv_type = "newsletter"
+
+
+class NewsletterBulkDownloadView(BaseBulkDownloadView):
+    csv_type = "newsletter"

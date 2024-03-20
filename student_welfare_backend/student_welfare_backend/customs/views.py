@@ -6,7 +6,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from student_welfare_backend.customs.permissions import IsDSW, IsADSW
-from student_welfare_backend.student_welfare_backend.csv_handler.importer.csv_importer import CSVImporter
+from student_welfare_backend.csv_handler.importer.csv_importer import CSVImporter
 from student_welfare_backend.csv_handler.exporter import CSVExporter
 
 

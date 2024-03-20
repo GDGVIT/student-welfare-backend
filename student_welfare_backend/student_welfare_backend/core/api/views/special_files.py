@@ -9,7 +9,7 @@ from student_welfare_backend.core.models import SpecialFile
 from student_welfare_backend.core.api.serializers import SpecialFileSerializer
 from student_welfare_backend.customs.pagination import CustomPagination
 from student_welfare_backend.customs.permissions import IsDSW, IsADSW
-
+from student_welfare_backend.customs.views import BaseBulkUploadView, BaseBulkDownloadView
 
 class SpecialFileViewSet(ReadOnlyModelViewSet):
     authentication_classes = []
@@ -35,3 +35,11 @@ class SpecialFileAdminViewSet(ModelViewSet):
     search_fields = ["year", "type"]
     ordering_fields = ["year"]
     ordering = ["-year"]
+
+
+class SpecialFilesBulkUploadView(BaseBulkUploadView):
+    csv_type = "special_file"
+
+
+class SpecialFilesBulkDownloadView(BaseBulkDownloadView):
+    csv_type = "special_file"

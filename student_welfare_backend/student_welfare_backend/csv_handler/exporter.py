@@ -2,11 +2,9 @@ import io
 import csv
 
 from student_welfare_backend.users.models import User
-from student_welfare_backend.core.models import Club, Event
-from student_welfare_backend.users.models import User
-from student_welfare_backend.core.models import Club, Event
+from student_welfare_backend.core.models import Club, Event, SpecialFile, Newsletter
 
-CSV_TYPES = ["user", "club", "event"]
+CSV_TYPES = ["user", "club", "event","special_file","newsletter"]
 
 
 USER_FIELDS = [
@@ -29,7 +27,9 @@ CLUB_FIELDS = [
 
 EVENT_FIELDS = ["name", "description", "organizing_body__name", "start_time", "end_time", "venue", "event_coordinators"]
 
+SPECIALFILE_FIELDS = ["year", "file_link", "type"]
 
+NEWSLETTER_FIELDS = ["link", "cover_page", "month", "year"]
 # Create a csv in memory and return it as a file object
 def write_csv(data, fields):
     csv_file = io.StringIO()
@@ -97,6 +97,12 @@ class CSVExporter:
         elif csv_type == "event":
             self.csv_fields = EVENT_FIELDS
             self.model = Event
+        elif csv_type == "special_file":
+            self.csv_fields = SPECIALFILE_FIELDS
+            self.model = SpecialFile
+        elif csv_type == "newsletter":
+            self.csv_fields = NEWSLETTER_FIELDS
+            self.model = Newsletter
 
     def export_csv(self, filter):
         try:
