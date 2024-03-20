@@ -36,12 +36,14 @@ class EventsCSVImporter:
             # Create event
             event = Event.objects.update_or_create(
                 name=row_data["name"],
-                description=row_data["description"],
-                organizing_body=row_data["club"],
-                start_time=datetime.strptime(row_data["start_time"], "%Y-%m-%d %H:%M:%S"),
-                end_time=datetime.strptime(row_data["end_time"], "%Y-%m-%d %H:%M:%S"),
-                venue=row_data["venue"],
-                status=row_data["status"],
+                defaults={
+                    "description": row_data["description"],
+                    "organizing_body": row_data["club"],
+                    "start_time": datetime.strptime(row_data["start_time"], "%Y-%m-%d %H:%M:%S"),
+                    "end_time": datetime.strptime(row_data["end_time"], "%Y-%m-%d %H:%M:%S"),
+                    "venue": row_data["venue"],
+                    "status": row_data["status"],
+                },
             )
 
             if row_data["coordinator1"]:
