@@ -27,11 +27,13 @@ class UsersCSVImporter:
             # Create user
             user = User.objects.update_or_create(
                 username=row_data["reg_no"],
-                name=row_data["name"],
-                email=row_data["email"],
-                phone_no=row_data["phone"],
-                is_faculty=bool(row_data.get("is_faculty", False)),
-                tenure=row_data.get("tenure", ""),
+                defaults={
+                    "name": row_data["name"],
+                    "email": row_data["email"],
+                    "phone_no": row_data["phone"],
+                    "is_faculty": bool(row_data.get("is_faculty", False)),
+                    "tenure": row_data.get("tenure", ""),
+                },
             )
             user.set_unusable_password()
 

@@ -5,7 +5,7 @@ class ClubsCSVImporter:
     STANDARD_FIELDS = [
         "name", 
         "type", 
-        ""
+        "sub_type",
         ]
     REQUIRED_FIELDS = ["name"]
 
@@ -19,8 +19,10 @@ class ClubsCSVImporter:
             # Create club
             club = Club.objects.update_or_create(
                 name=row_data["name"],
-                is_chapter=bool(row_data.get("is_chapter", False)),
-                is_technical=bool(row_data.get("is_technical", False)),
+                defaults={
+                    "type": row_data["type"],
+                    "sub_type": row_data["sub_type"],
+                },
             )
 
             responses["success"].append({"row": row_data, "detail": "Club created successfully"})
