@@ -21,6 +21,8 @@ from student_welfare_backend.core.api.views.spotlights import (
 from student_welfare_backend.core.api.views.newsletters import (
     NewsletterViewSet,
     NewsletterAdminViewSet,
+    NewsletterBulkUploadView,
+    NewsletterBulkDownloadView
 )
 from student_welfare_backend.core.api.views.faqs import (
     FAQViewSet, 
@@ -29,6 +31,8 @@ from student_welfare_backend.core.api.views.faqs import (
 from student_welfare_backend.core.api.views.special_files import (
     SpecialFileViewSet,
     SpecialFileAdminViewSet,
+    SpecialFilesBulkUploadView,
+    SpecialFilesBulkDownloadView
 )
 from student_welfare_backend.core.api.views.notifications import PushNotificationView
 
@@ -57,6 +61,27 @@ urlpatterns = [
         "admin/events/bulk_download/",
         EventBulkDownloadView.as_view(),
         name="events_bulk_download",
+    ),
+    path(
+        "admin/newsletters/bulk_upload/",
+        NewsletterBulkUploadView.as_view(),
+        name="newsletters_bulk_upload",
+
+    ),
+    path(
+        "admin/newsletters/bulk_download/",
+        NewsletterBulkDownloadView.as_view(),
+        name="newsletters_bulk_download",
+    ),
+    path(
+        "admin/special_files/bulk_upload/",
+        SpecialFilesBulkUploadView.as_view(),
+        name="special_files_bulk_upload",
+    ),
+    path(
+        "admin/special_files/bulk_download/",
+        SpecialFilesBulkDownloadView.as_view(),
+        name="special_files_bulk_download",
     ),
     # NOTIFICATIONS
     path(

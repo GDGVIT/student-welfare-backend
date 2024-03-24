@@ -34,6 +34,7 @@ class Club(models.Model):
     is_technical = models.BooleanField(_("Technical"), default=False)
     type = models.CharField(_("Type"), max_length=50, choices=club_type_choices, default="club")
     sub_type = models.CharField(_("Sub Type"), max_length=50, null=True, blank=True)
+    description = models.CharField(_("Description"), max_length=500, null=True, blank=True)
 
     @property
     def chairperson(self):

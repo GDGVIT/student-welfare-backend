@@ -12,7 +12,7 @@ class ClubsCSVImporter:
     def process_csv_func(self, row_data, responses):
         try:
             # Validate required fields
-            missing_fields = [field for field in self.required_columns if row_data[field] is None]
+            missing_fields = [field for field in self.REQUIRED_FIELDS if row_data[field] is None]
             if missing_fields:
                 raise ValueError(f"Missing required fields: {', '.join(missing_fields)}")
 
