@@ -284,6 +284,3 @@ student_welfare_backend/media/
 # Credentials
 credentials/*
 !credentials/.gitkeep
-
-#Temp
-student_council.py
