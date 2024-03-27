@@ -6,8 +6,9 @@ class ClubsCSVImporter:
         "name", 
         "type", 
         "sub_type",
+        "description",
         ]
-    REQUIRED_FIELDS = ["name"]
+    REQUIRED_FIELDS = ["name","type"]
 
     def process_csv_func(self, row_data, responses):
         try:
@@ -22,6 +23,7 @@ class ClubsCSVImporter:
                 defaults={
                     "type": row_data["type"],
                     "sub_type": row_data["sub_type"],
+                    "description": row_data["description"]
                 },
             )
 
