@@ -98,11 +98,11 @@ class Event(models.Model):
     class Meta:
         verbose_name = "Event"
         verbose_name_plural = "Events"
-        unique_together = ("name", "organization")
+        unique_together = ("name", "organizing_body")
 
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="events")
+    organizing_body = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="events")
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     venue = models.CharField(max_length=50)

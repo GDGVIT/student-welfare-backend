@@ -38,11 +38,11 @@ class EventAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "name",
-        "organization",
+        "organizing_body",
         "start_time",
         "end_time",
     ]
-    list_filter = ["organization"]
+    list_filter = ["organizing_body"]
 
 
 @admin.register(Spotlight)

@@ -11,5 +11,4 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameField("UserOrganizationRelation", "club", "organization"),
-        migrations.RenameField("Event", "organizing_body", "organization"),
     ]
