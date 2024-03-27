@@ -11,10 +11,10 @@ class ClubAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "name",
-        "is_chapter",
-        "is_technical",
+        "type",
+        "subtype",
     ]
-    list_filter = ["is_chapter", "is_technical"]
+    list_filter = ["type", "subtype"]
 
 
 @admin.register(UserClubRelation)
