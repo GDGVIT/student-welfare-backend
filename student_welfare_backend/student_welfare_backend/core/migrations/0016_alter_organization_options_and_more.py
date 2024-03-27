@@ -21,11 +21,6 @@ class Migration(migrations.Migration):
             name='userorganizationrelation',
             options={'verbose_name': 'User Organization relation', 'verbose_name_plural': 'User Organization relations'},
         ),
-        migrations.RenameField(
-            model_name='event',
-            old_name='organization',
-            new_name='organizing_body',
-        ),
         migrations.RemoveField(
             model_name='organization',
             name='is_chapter',
@@ -48,9 +43,5 @@ class Migration(migrations.Migration):
             model_name='userorganizationrelation',
             name='user',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='user_organization_relations', to=settings.AUTH_USER_MODEL),
-        ),
-        migrations.AlterUniqueTogether(
-            name='event',
-            unique_together={('name', 'organizing_body')},
         ),
     ]
