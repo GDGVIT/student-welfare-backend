@@ -1,6 +1,6 @@
 
 from student_welfare_backend.users.models import User
-from student_welfare_backend.csv_handler.importer.clubs import ClubsCSVImporter
+from student_welfare_backend.csv_handler.importer.organizations import OrganizationsCSVImporter
 from student_welfare_backend.csv_handler.importer.events import EventsCSVImporter
 from student_welfare_backend.csv_handler.importer.users import UsersCSVImporter
 from student_welfare_backend.csv_handler.importer.newsletters import NewslettersCSVImporter
@@ -9,7 +9,7 @@ from student_welfare_backend.csv_handler.importer.utils import process_csv
 
 
 CSV_TYPES = {
-    "club": ClubsCSVImporter,
+    "organization": OrganizationsCSVImporter,
     "event": EventsCSVImporter,
     "user": UsersCSVImporter,
     "newsletter": NewslettersCSVImporter,

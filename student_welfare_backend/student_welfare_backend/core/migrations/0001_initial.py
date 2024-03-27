@@ -116,7 +116,7 @@ class Migration(migrations.Migration):
                     models.ManyToManyField(blank=True, to=settings.AUTH_USER_MODEL),
                 ),
                 (
-                    "organizing_body",
+                    "organization",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="events",
@@ -127,7 +127,7 @@ class Migration(migrations.Migration):
             options={
                 "verbose_name": "Event",
                 "verbose_name_plural": "Events",
-                "unique_together": {("name", "organizing_body")},
+                "unique_together": {("name", "organization")},
             },
         ),
     ]

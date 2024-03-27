@@ -9,38 +9,38 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-from student_welfare_backend.core.models import Club
+from student_welfare_backend.core.models import Organization
 from student_welfare_backend.core.api.serializers import (
-    ClubSerializer,
-    ClubDetailSerializer,
+    OrganizationSerializer,
+    OrganizationDetailSerializer,
 )
 from student_welfare_backend.customs.pagination import CustomPagination
 from student_welfare_backend.customs.permissions import IsDSW, IsADSW
 from student_welfare_backend.customs.views import BaseBulkUploadView, BaseBulkDownloadView
 
 
-class ClubsListView(APIView):
+class OrganizationsListView(APIView):
     authentication_classes = []
     permission_classes = []
 
     @staticmethod
     def get(request):
         response = []
-        for club in Club.objects.all():
+        for organization in Organization.objects.all():
             response.append(
                 {
-                    "id": club.id,
-                    "name": club.name,
+                    "id": organization.id,
+                    "name": organization.name,
                 }
             )
         return Response(response, status=status.HTTP_200_OK)
 
 
-class ClubViewSet(ReadOnlyModelViewSet):
+class OrganizationViewSet(ReadOnlyModelViewSet):
     authentication_classes = []
     permission_classes = []
-    queryset = Club.objects.all()
-    serializer_class = ClubDetailSerializer
+    queryset = Organization.objects.all()
+    serializer_class = OrganizationDetailSerializer
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
     filterset_fields = ["is_technical", "is_chapter", "type", "sub_type"]
@@ -50,8 +50,8 @@ class ClubViewSet(ReadOnlyModelViewSet):
 
     def get_serializer_class(self):
         if self.action == "list":
-            return ClubSerializer
-        return ClubDetailSerializer
+            return OrganizationSerializer
+        return OrganizationDetailSerializer
     
 
 class SpecialOrganizationsAPIView(APIView):
@@ -73,23 +73,23 @@ class SpecialOrganizationsAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         
-        organizations = Club.objects.filter(type=organization_type).order_by("-name").all()
+        organizations = Organization.objects.filter(type=organization_type).order_by("-name").all()
         if len(organizations) == 0:
             return Response(
                 {"detail": "No such organizations found"},
                 status=status.HTTP_404_NOT_FOUND,
             )
         return Response(
-            ClubDetailSerializer(organizations, many=True).data,
+            OrganizationDetailSerializer(organizations, many=True).data,
             status=status.HTTP_200_OK,
         )
 
 
-class ClubAdminViewSet(ModelViewSet):
+class OrganizationAdminViewSet(ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsDSW | IsADSW]
-    queryset = Club.objects.all()
-    serializer_class = ClubDetailSerializer
+    queryset = Organization.objects.all()
+    serializer_class = OrganizationDetailSerializer
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
     filterset_fields = ["is_technical", "is_chapter"]
@@ -99,12 +99,12 @@ class ClubAdminViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == "list":
-            return ClubSerializer
-        return ClubDetailSerializer
+            return OrganizationSerializer
+        return OrganizationDetailSerializer
 
 
-class ClubBulkUploadView(BaseBulkUploadView):
-    csv_type = "club"
+class OrganizationBulkUploadView(BaseBulkUploadView):
+    csv_type = "organization"
 
-class ClubBulkDownloadView(BaseBulkDownloadView):
-    csv_type = "club"
+class OrganizationBulkDownloadView(BaseBulkDownloadView):
+    csv_type = "organization"

@@ -1,12 +1,12 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-from student_welfare_backend.core.api.views.clubs import (
-    ClubViewSet,
+from student_welfare_backend.core.api.views.organizations import (
+    OrganizationViewSet,
     SpecialOrganizationsAPIView,
-    ClubAdminViewSet,
-    ClubsListView,
-    ClubBulkUploadView,
-    ClubBulkDownloadView,
+    OrganizationAdminViewSet,
+    OrganizationsListView,
+    OrganizationBulkUploadView,
+    OrganizationBulkDownloadView,
 )
 from student_welfare_backend.core.api.views.events import (
     EventViewSet,
@@ -39,18 +39,18 @@ from student_welfare_backend.core.api.views.notifications import PushNotificatio
 # URL PATTERNS
 urlpatterns = [
     # LISTS
-    path("clubs/titles/", ClubsListView.as_view(), name="clubs_titles"),
+    path("organizations/titles/", OrganizationsListView.as_view(), name="organizations_titles"),
     path("special_organizations/", SpecialOrganizationsAPIView.as_view(), name="special_organizations"),
     # BULK UPLOAD
     path(
-        "admin/clubs/bulk_upload/",
-        ClubBulkUploadView.as_view(),
-        name="clubs_bulk_upload",
+        "admin/organizations/bulk_upload/",
+        OrganizationBulkUploadView.as_view(),
+        name="organizations_bulk_upload",
     ),
     path(
-        "admin/clubs/bulk_download/",
-        ClubBulkDownloadView.as_view(),
-        name="clubs_bulk_download",
+        "admin/organizations/bulk_download/",
+        OrganizationBulkDownloadView.as_view(),
+        name="organizations_bulk_download",
     ),
     path(
         "admin/events/bulk_upload/",
@@ -92,14 +92,14 @@ urlpatterns = [
 ]
 
 
-# CLUBS
-club_router = DefaultRouter()
-club_router.register(r"clubs", ClubViewSet, basename="clubs")
-urlpatterns += club_router.urls
+# ORGANIZATIONS
+organization_router = DefaultRouter()
+organization_router.register(r"organizations", OrganizationViewSet, basename="organizations")
+urlpatterns += organization_router.urls
 
-club_admin_router = DefaultRouter()
-club_admin_router.register(r"admin/clubs", ClubAdminViewSet, basename="clubs_admin")
-urlpatterns += club_admin_router.urls
+organization_admin_router = DefaultRouter()
+organization_admin_router.register(r"admin/organizations", OrganizationAdminViewSet, basename="organizations_admin")
+urlpatterns += organization_admin_router.urls
 
 
 # EVENTS

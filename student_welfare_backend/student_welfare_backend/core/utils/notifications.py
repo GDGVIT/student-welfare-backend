@@ -22,7 +22,7 @@ def send_notification(title, body, topic, image_url=None):
 @app.task(name="send_event_notification")
 def send_event_notification(event: Event, body: str):
     title = event.title
-    topic = f"{event.organizing_body.name}"
+    topic = f"{event.organization.name}"
     image_url = event.poster_link
     send_notification(title, body, topic, image_url)
 
