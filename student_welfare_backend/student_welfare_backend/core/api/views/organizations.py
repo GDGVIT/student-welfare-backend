@@ -43,7 +43,7 @@ class OrganizationViewSet(ReadOnlyModelViewSet):
     serializer_class = OrganizationDetailSerializer
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
-    filterset_fields = ["is_technical", "is_chapter", "type", "sub_type"]
+    filterset_fields = ["type", "sub_type"]
     search_fields = ["name"]
     ordering_fields = ["name"]
     ordering = ["name"]
@@ -92,7 +92,7 @@ class OrganizationAdminViewSet(ModelViewSet):
     serializer_class = OrganizationDetailSerializer
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
-    filterset_fields = ["is_technical", "is_chapter"]
+    filterset_fields = ["type", "sub_type"]
     search_fields = ["name"]
     ordering_fields = ["name"]
     ordering = ["name"]
