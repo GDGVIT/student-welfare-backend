@@ -37,6 +37,7 @@ class User(AbstractUser):
     tenure = models.CharField(
         _("Pass out year of the student"),
         blank=True,
+        null=True,
         max_length=4,
         validators=[validate_tenure],
     )

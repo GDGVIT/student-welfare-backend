@@ -12,9 +12,9 @@ class ClubAdmin(admin.ModelAdmin):
         "id",
         "name",
         "type",
-        "subtype",
+        "sub_type",
     ]
-    list_filter = ["type", "subtype"]
+    list_filter = ["type", "sub_type"]
 
 
 @admin.register(UserClubRelation)
