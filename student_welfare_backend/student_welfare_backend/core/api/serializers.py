@@ -26,6 +26,9 @@ class OrganizationSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "name",
+            "type",
+            "sub_type",
+            "logo_link",
         ]
 
 
