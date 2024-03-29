@@ -9,11 +9,11 @@ from student_welfare_backend.core.models import (
     FAQ, 
     SpecialFile,
 )
-from student_welfare_backend.users.api.serializers import UserLoginSerializer
+from student_welfare_backend.users.api.serializers import UserDetailSerializer
 
 
 class UserOrganizationRelationSerializer(serializers.ModelSerializer):
-    user = UserLoginSerializer()
+    user = UserDetailSerializer()
 
     class Meta:
         model = UserOrganizationRelation

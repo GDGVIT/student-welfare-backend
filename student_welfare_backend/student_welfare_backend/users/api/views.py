@@ -23,7 +23,6 @@ from student_welfare_backend.users.api.serializers import (
     UserLoginSerializer,
     UserAdminSerializer,
     UserAdminListSerializer,
-    SWTeamSerializer,
 )
 from student_welfare_backend.customs.permissions import IsDSW, IsADSW
 from student_welfare_backend.customs.views import BaseBulkUploadView, BaseBulkDownloadView
@@ -292,18 +291,6 @@ class VerifyResetPasswordOTPView(APIView):
             return Response({"detail": "Wrong OTP value."}, status=HTTPStatus.BAD_REQUEST)
 
         return Response({"detail": "Password reset successful!"}, status=HTTPStatus.OK)
-
-
-class SWTeamView(APIView):
-    authentication_classes = []
-    permission_classes = []
-
-    @staticmethod
-    def get(request):
-        sw_team = User.objects.filter(Q(is_dsw=True) | Q(is_adsw=True))
-
-        serializer = SWTeamSerializer(sw_team, many=True)
-        return Response(status=status.HTTP_200_OK, data=serializer.data)
 
 
 class UserAdminViewset(ModelViewSet):
