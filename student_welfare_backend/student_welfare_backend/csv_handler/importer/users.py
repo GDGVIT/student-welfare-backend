@@ -1,4 +1,5 @@
 from student_welfare_backend.users.models import User
+from student_welfare_backend.core.models import UserClubRelation
 
 
 class UsersCSVImporter:
@@ -40,3 +41,5 @@ class UsersCSVImporter:
             responses["success"].append({"row": row_data, "detail": "User created successfully"})
         except Exception as e:
             responses["failure"].append({"row": row_data, "detail": str(e)})
+            
+
