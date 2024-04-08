@@ -1,7 +1,7 @@
-from student_welfare_backend.core.models import Club
+from student_welfare_backend.core.models import Organization
 
 
-class ClubsCSVImporter:
+class OrganizationsCSVImporter:
     STANDARD_FIELDS = [
         "name", 
         "type", 
@@ -17,8 +17,8 @@ class ClubsCSVImporter:
             if missing_fields:
                 raise ValueError(f"Missing required fields: {', '.join(missing_fields)}")
 
-            # Create club
-            club = Club.objects.update_or_create(
+            # Create organization
+            organization = Organization.objects.update_or_create(
                 name=row_data["name"],
                 defaults={
                     "type": row_data["type"],
@@ -27,6 +27,6 @@ class ClubsCSVImporter:
                 },
             )
 
-            responses["success"].append({"row": row_data, "detail": "Club created successfully"})
+            responses["success"].append({"row": row_data, "detail": "Organization created successfully"})
         except Exception as e:
             responses["failure"].append({"row": row_data, "detail": str(e)})

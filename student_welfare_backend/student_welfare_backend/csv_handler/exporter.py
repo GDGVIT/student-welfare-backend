@@ -2,9 +2,9 @@ import io
 import csv
 
 from student_welfare_backend.users.models import User
-from student_welfare_backend.core.models import Club, Event, SpecialFile, Newsletter
+from student_welfare_backend.core.models import Organization, Event, SpecialFile, Newsletter
 
-CSV_TYPES = ["user", "club", "event","special_file","newsletter"]
+CSV_TYPES = ["user", "Ooganization", "event","special_file","newsletter"]
 
 
 USER_FIELDS = [
@@ -18,14 +18,14 @@ USER_FIELDS = [
     "is_adsw",
 ]
 
-CLUB_FIELDS = [
+ORGANIZATION_FIELDS = [
     "name",
-    "is_chapter",
-    "is_technical",
+    "type",
+    "sub_type",
     "logo_link",
 ]
 
-EVENT_FIELDS = ["name", "description", "organizing_body__name", "start_time", "end_time", "venue", "event_coordinators"]
+EVENT_FIELDS = ["name", "description", "organization__name", "start_time", "end_time", "venue", "event_coordinators"]
 
 SPECIALFILE_FIELDS = ["year", "file_link", "type"]
 
@@ -91,9 +91,9 @@ class CSVExporter:
         if csv_type == "user":
             self.csv_fields = USER_FIELDS
             self.model = User
-        elif csv_type == "club":
-            self.csv_fields = CLUB_FIELDS
-            self.model = Club
+        elif csv_type == "Ooganization":
+            self.csv_fields = ORGANIZATION_FIELDS
+            self.model = Organization
         elif csv_type == "event":
             self.csv_fields = EVENT_FIELDS
             self.model = Event

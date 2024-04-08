@@ -1,12 +1,12 @@
 from django.contrib import admin
 
-from student_welfare_backend.core.models import Club, Event, Spotlight, UserClubRelation, Newsletter, FAQ, SpecialFile
+from student_welfare_backend.core.models import Organization, Event, Spotlight, UserOrganizationRelation, Newsletter, FAQ, SpecialFile
 
 
 # Register your models here.
-@admin.register(Club)
-class ClubAdmin(admin.ModelAdmin):
-    """Admin for Club model."""
+@admin.register(Organization)
+class OrganizationAdmin(admin.ModelAdmin):
+    """Admin for Organization model."""
 
     list_display = [
         "id",
@@ -17,14 +17,14 @@ class ClubAdmin(admin.ModelAdmin):
     list_filter = ["type", "sub_type"]
 
 
-@admin.register(UserClubRelation)
-class UserClubRelationAdmin(admin.ModelAdmin):
-    """Admin for UserClubRelation model."""
+@admin.register(UserOrganizationRelation)
+class UserOrganizationRelationAdmin(admin.ModelAdmin):
+    """Admin for UserOrganizationRelation model."""
 
     list_display = [
         "id",
         "user",
-        "club",
+        "organization",
         "role",
         "position"
     ]

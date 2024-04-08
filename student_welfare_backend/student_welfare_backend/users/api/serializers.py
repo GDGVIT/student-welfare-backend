@@ -21,9 +21,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
         fields = ["username", "name", "is_faculty", "verified"]
 
 
-class SWTeamSerializer(serializers.ModelSerializer):
-    role = serializers.SerializerMethodField()
-
+class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
@@ -32,19 +30,10 @@ class SWTeamSerializer(serializers.ModelSerializer):
                   "email", 
                   "phone_no", 
                   "is_faculty", 
-                  "role",
                   "tenure",
+                  "office_location",
                   ]
-    
-    def get_role(self, obj):
-        if obj.is_dsw:
-            return "dsw"
-        elif obj.is_adsw:
-            return "adsw"
-        elif obj.is_faculty:
-            return "faculty"
-        else:
-            return "student"
+
 
 class UserAdminSerializer(serializers.ModelSerializer):
     class Meta:

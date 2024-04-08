@@ -45,6 +45,7 @@ class User(AbstractUser):
     is_faculty = models.BooleanField(_("User is faculty"), default=False)
     is_dsw = models.BooleanField(_("User is DSW"), default=False)
     is_adsw = models.BooleanField(_("User is ADSW"), default=False)
+    office_location = models.CharField(_("Office location of the user"), blank=True, max_length=255)
 
     def get_absolute_url(self):
         """Get url for user's detail view.

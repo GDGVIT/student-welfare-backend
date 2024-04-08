@@ -2,48 +2,49 @@ from rest_framework import serializers
 
 from student_welfare_backend.core.models import (
     Event, 
-    Club, 
-    UserClubRelation, 
+    Organization, 
+    UserOrganizationRelation, 
     Spotlight, 
     Newsletter, 
     FAQ, 
     SpecialFile,
 )
-from student_welfare_backend.users.api.serializers import UserLoginSerializer
+from student_welfare_backend.users.api.serializers import UserDetailSerializer
 
 
-class UserClubRelationSerializer(serializers.ModelSerializer):
-    user = UserLoginSerializer()
+class UserOrganizationRelationSerializer(serializers.ModelSerializer):
+    user = UserDetailSerializer()
 
     class Meta:
-        model = UserClubRelation
+        model = UserOrganizationRelation
         fields = ["user", "role", "position"]
 
 
-class ClubSerializer(serializers.ModelSerializer):
+class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Club
+        model = Organization
         fields = [
             "id",
             "name",
-            "is_chapter",
-            "is_technical",
+            "type",
+            "sub_type",
+            "logo_link",
         ]
 
 
-class ClubDetailSerializer(serializers.ModelSerializer):
-    chairperson = UserClubRelationSerializer()
-    faculty_coordinator = UserClubRelationSerializer()
-    board_members = UserClubRelationSerializer(many=True)
-    members = UserClubRelationSerializer(many=True)
+class OrganizationDetailSerializer(serializers.ModelSerializer):
+    chairperson = UserOrganizationRelationSerializer()
+    faculty_coordinator = UserOrganizationRelationSerializer()
+    board_members = UserOrganizationRelationSerializer(many=True)
+    members = UserOrganizationRelationSerializer(many=True)
 
     class Meta:
-        model = Club
+        model = Organization
         fields = [
             "id",
             "name",
-            "is_chapter",
-            "is_technical",
+            "type",
+            "sub_type",
             "chairperson",
             "faculty_coordinator",
             "board_members",
@@ -52,7 +53,7 @@ class ClubDetailSerializer(serializers.ModelSerializer):
 
 
 class EventListSerializer(serializers.ModelSerializer):
-    organizing_body = ClubSerializer()
+    organization = OrganizationSerializer()
 
     class Meta:
         model = Event
@@ -60,7 +61,7 @@ class EventListSerializer(serializers.ModelSerializer):
 
 
 class EventDetailSerializer(serializers.ModelSerializer):
-    organizing_body = ClubSerializer()
+    organization = OrganizationSerializer()
 
     class Meta:
         model = Event

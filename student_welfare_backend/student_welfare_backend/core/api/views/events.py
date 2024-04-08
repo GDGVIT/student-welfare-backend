@@ -6,7 +6,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-from student_welfare_backend.core.models import Event, Club
+from student_welfare_backend.core.models import Event
 from student_welfare_backend.core.api.serializers import (
     EventListSerializer,
     EventDetailSerializer,
@@ -23,11 +23,11 @@ class EventViewSet(ReadOnlyModelViewSet):
     serializer_class = EventDetailSerializer
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
-    filterset_fields = ["organizing_body__name", "venue", "start_time", "end_time"]
-    search_fields = ["name", "organizing_body__name", "venue", "start_time", "end_time"]
+    filterset_fields = ["organization__name", "venue", "start_time", "end_time"]
+    search_fields = ["name", "organization__name", "venue", "start_time", "end_time"]
     ordering_fields = [
         "name",
-        "organizing_body__name",
+        "organization__name",
         "venue",
         "start_time",
         "end_time",
@@ -76,10 +76,10 @@ class EventAdminViewSet(ModelViewSet):
     serializer_class = EventDetailSerializer
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, OrderingFilter]
-    search_fields = ["name", "organizing_body__name", "venue", "start_time", "end_time"]
+    search_fields = ["name", "organization__name", "venue", "start_time", "end_time"]
     ordering_fields = [
         "name",
-        "organizing_body__name",
+        "organization__name",
         "venue",
         "start_time",
         "end_time",

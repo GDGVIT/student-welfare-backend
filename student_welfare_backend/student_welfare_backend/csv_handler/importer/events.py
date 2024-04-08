@@ -8,7 +8,7 @@ class EventsCSVImporter:
     STANDARD_FIELDS = [
         "name",
         "description",
-        "club",
+        "organization",
         "start_time",
         "end_time",
         "venue",
@@ -19,7 +19,7 @@ class EventsCSVImporter:
     REQUIRED_FIELDS = [
         "name",
         "description",
-        "club",
+        "organization",
         "start_time",
         "end_time",
         "venue",
@@ -38,7 +38,7 @@ class EventsCSVImporter:
                 name=row_data["name"],
                 defaults={
                     "description": row_data["description"],
-                    "organizing_body": row_data["club"],
+                    "organization": row_data["organization"],
                     "start_time": datetime.strptime(row_data["start_time"], "%Y-%m-%d %H:%M:%S"),
                     "end_time": datetime.strptime(row_data["end_time"], "%Y-%m-%d %H:%M:%S"),
                     "venue": row_data["venue"],
