@@ -21,14 +21,14 @@ class Migration(migrations.Migration):
             name='userorganizationrelation',
             options={'verbose_name': 'User Organization relation', 'verbose_name_plural': 'User Organization relations'},
         ),
-        migrations.RemoveField(
-            model_name='organization',
-            name='is_chapter',
-        ),
-        migrations.RemoveField(
-            model_name='organization',
-            name='is_technical',
-        ),
+        #migrations.RemoveField(
+            #model_name='organization',
+            #name='is_chapter',
+        #),
+        #migrations.RemoveField(
+            #model_name='organization',
+            #name='is_technical',
+        #),
         migrations.AlterField(
             model_name='organization',
             name='name',
