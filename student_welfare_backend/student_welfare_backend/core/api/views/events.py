@@ -23,11 +23,11 @@ class EventViewSet(ReadOnlyModelViewSet):
     serializer_class = EventDetailSerializer
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
-    filterset_fields = ["organization__name", "venue", "start_time", "end_time"]
-    search_fields = ["name", "organization__name", "venue", "start_time", "end_time"]
+    filterset_fields = ["organizing_body__name", "venue", "start_time", "end_time"]
+    search_fields = ["name", "organizing_body__name", "venue", "start_time", "end_time"]
     ordering_fields = [
         "name",
-        "organization__name",
+        "organizing_body__name",
         "venue",
         "start_time",
         "end_time",
@@ -76,10 +76,10 @@ class EventAdminViewSet(ModelViewSet):
     serializer_class = EventDetailSerializer
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, OrderingFilter]
-    search_fields = ["name", "organization__name", "venue", "start_time", "end_time"]
+    search_fields = ["name", "organizing_body__name", "venue", "start_time", "end_time"]
     ordering_fields = [
         "name",
-        "organization__name",
+        "organizing_body__name",
         "venue",
         "start_time",
         "end_time",
