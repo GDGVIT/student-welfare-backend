@@ -53,7 +53,7 @@ class OrganizationDetailSerializer(serializers.ModelSerializer):
 
 
 class EventListSerializer(serializers.ModelSerializer):
-    organization = OrganizationSerializer()
+    organizing_body = OrganizationSerializer()
 
     class Meta:
         model = Event
@@ -61,7 +61,7 @@ class EventListSerializer(serializers.ModelSerializer):
 
 
 class EventDetailSerializer(serializers.ModelSerializer):
-    organization = OrganizationSerializer()
+    organizing_body = OrganizationSerializer()
 
     class Meta:
         model = Event
