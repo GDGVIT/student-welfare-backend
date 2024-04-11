@@ -1,5 +1,5 @@
 from student_welfare_backend.users.models import User
-
+from student_welfare_backend.core.models import UserOrganizationRelation, Organization
 
 class UsersCSVImporter:
     STANDARD_FIELDS = [
@@ -9,12 +9,16 @@ class UsersCSVImporter:
         "phone", 
         "is_faculty",
         "tenure",
+        "type",
+        "role"
         ]
     REQUIRED_FIELDS = [
         "reg_no", 
         "name", 
         "email", 
-        "phone"
+        "phone",
+        "type",
+        "role"
         ]
 
     def process_csv_func(self, row_data, responses):
@@ -25,18 +29,28 @@ class UsersCSVImporter:
                 raise ValueError(f"Missing required fields: {', '.join(missing_fields)}")
 
             # Create user
-            user = User.objects.update_or_create(
+            user,created = User.objects.update_or_create(
                 username=row_data["reg_no"],
                 defaults={
                     "name": row_data["name"],
                     "email": row_data["email"],
                     "phone_no": row_data["phone"],
                     "is_faculty": bool(row_data.get("is_faculty", False)),
-                    "tenure": row_data.get("tenure", ""),
-                },
+                    "tenure": row_data.get("tenure", "")
+                }
             )
             user.set_unusable_password()
-
-            responses["success"].append({"row": row_data, "detail": "User created successfully"})
+            user.save()
+            #responses["success"].append({"row": row_data, "detail": "User created successfully"})
+            organization_type = row_data["type"]
+            organization = Organization.objects.get(type=organization_type)
+            userrel= UserOrganizationRelation.objects.update_or_create(
+                user=user,
+                organization=organization,
+                defaults={
+                    "role": row_data["role"],
+                },
+            )
+            responses["success"].append({"row": row_data, "detail": "User Organization Relation created successfully"})
         except Exception as e:
             responses["failure"].append({"row": row_data, "detail": str(e)})
