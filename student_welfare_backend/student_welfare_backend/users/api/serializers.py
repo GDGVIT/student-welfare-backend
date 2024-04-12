@@ -18,7 +18,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["username", "name", "is_faculty", "verified"]
+        fields = ["username", "picture_url", "name", "is_faculty", "verified"]
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -26,6 +26,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
         model = User
         fields = [
                   "username", 
+                  "picture_url",
                   "name",
                   "email", 
                   "phone_no", 
@@ -41,6 +42,7 @@ class UserAdminSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "username",
+            "picture_url",
             "name",
             "email",
             "phone_no",
