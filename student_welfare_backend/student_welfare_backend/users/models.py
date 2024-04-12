@@ -40,6 +40,7 @@ class User(AbstractUser):
         max_length=4,
         validators=[validate_tenure],
     )
+    picture_url = models.URLField(_("URL of the user's profile picture"), blank=True)
     verified = models.BooleanField(default=False)
     is_faculty = models.BooleanField(_("User is faculty"), default=False)
     is_dsw = models.BooleanField(_("User is DSW"), default=False)
