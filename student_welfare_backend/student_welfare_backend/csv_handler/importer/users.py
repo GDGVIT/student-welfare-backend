@@ -39,7 +39,8 @@ class UsersCSVImporter:
                     "tenure": row_data.get("tenure", "")
                 }
             )
-            user.set_unusable_password()
+            if created == True:
+                user.set_unusable_password()
             user.save()
             #responses["success"].append({"row": row_data, "detail": "User created successfully"})
             organization_type = row_data["type"]
