@@ -32,7 +32,7 @@ class Organization(models.Model):
     logo_link = models.CharField(_("Logo link"), max_length=255, null=True, blank=True)
     type = models.CharField(_("Type"), max_length=50, choices=organization_type_choices, default="club")
     sub_type = models.CharField(_("Sub Type"), max_length=50, null=True, blank=True)
-    description = models.CharField(_("Description"), max_length=500, null=True, blank=True)
+    description = models.CharField(_("Description"), max_length=1000, null=True, blank=True)
 
     @property
     def chairperson(self):

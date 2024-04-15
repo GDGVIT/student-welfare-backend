@@ -10,7 +10,8 @@ class UsersCSVImporter:
         "is_faculty",
         "tenure",
         "type",
-        "role"
+        "role",
+        "office_location",
         ]
     REQUIRED_FIELDS = [
         "reg_no", 
@@ -37,7 +38,8 @@ class UsersCSVImporter:
                     "email": row_data["email"],
                     "phone_no": row_data["phone"],
                     "is_faculty": bool(row_data.get("is_faculty", False)),
-                    "tenure": row_data.get("tenure", "")
+                    "tenure": row_data.get("tenure", ""),
+                    "office_location": row_data.get("office_location", ""),
                 }
             )
             if created == True:
