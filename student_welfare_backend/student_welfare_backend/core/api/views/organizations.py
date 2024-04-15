@@ -102,9 +102,9 @@ class OrganizationSubTypeAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if organization_type not in ["student_welfare", "student_council", "greviance_cell"]:
+        if organization_type in ["student_welfare", "student_council", "greviance_cell", "counseling_division"]:
             return Response(
-                {"detail": "Invalid type parameter"},
+                {"detail": "Special organizations type parameter not allowed"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
