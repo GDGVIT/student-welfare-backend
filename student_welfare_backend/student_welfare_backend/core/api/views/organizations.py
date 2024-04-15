@@ -47,7 +47,7 @@ class OrganizationViewSet(ReadOnlyModelViewSet):
     search_fields = ["name"]
     ordering_fields = ["name"]
     ordering = ["name"]
-    special_organization_types = ["student_welfare", "student_council", "greviance_cell"]
+    special_organization_types = ["student_welfare", "student_council", "greviance_cell", "counseling_division"]
 
     def get_serializer_class(self):
         if (self.action == "list") and (
