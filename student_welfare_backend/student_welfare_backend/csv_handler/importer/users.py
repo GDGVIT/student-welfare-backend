@@ -18,7 +18,8 @@ class UsersCSVImporter:
         "email", 
         "phone",
         "type",
-        "role"
+        "role",
+        "position"
         ]
 
     def process_csv_func(self, row_data, responses):
@@ -50,6 +51,7 @@ class UsersCSVImporter:
                 organization=organization,
                 defaults={
                     "role": row_data["role"],
+                    "position": row_data["position"]
                 },
             )
             responses["success"].append({"row": row_data, "detail": "User Organization Relation created successfully"})
