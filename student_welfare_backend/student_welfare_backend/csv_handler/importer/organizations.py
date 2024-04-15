@@ -7,6 +7,7 @@ class OrganizationsCSVImporter:
         "type", 
         "sub_type",
         "description",
+        "logo_link",
         ]
     REQUIRED_FIELDS = ["name","type"]
 
@@ -23,7 +24,8 @@ class OrganizationsCSVImporter:
                 defaults={
                     "type": row_data["type"],
                     "sub_type": row_data["sub_type"],
-                    "description": row_data["description"]
+                    "description": row_data["description"],
+                    "logo_link": row_data["logo_link"],
                 },
             )
 
