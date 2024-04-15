@@ -1,4 +1,6 @@
-from django.db.models import IntegerField
+import calendar
+
+from django.db.models import Case, Value, IntegerField, When
 from django.db.models.functions import Cast
 from rest_framework import status, filters
 from rest_framework.views import APIView
@@ -29,15 +31,25 @@ class NewsletterViewSet(ReadOnlyModelViewSet):
     search_fields = ["year", "month"]
     ordering_fields = ["year", "month"]
     
+    def get_month_index(self, month_name):
+        # Get the index (1-based) of the month name using calendar library
+        months = {month.lower(): index for index, month in enumerate(calendar.month_name) if month}
+        return months.get(month_name.lower())
+
     def get_queryset(self):
         queryset = super().get_queryset()
-        
-        # Custom ordering: Combine year and month into a numeric value for sorting
+
+        # Custom sorting logic: Convert month names to numeric values
         queryset = queryset.annotate(
-            year_as_int=Cast('year', IntegerField()),
-            month_as_int=Cast('month', IntegerField())
-        ).order_by('-year_as_int', '-month_as_int')
-        
+            month_index=Case(
+                *[When(month__iexact=month_name, then=Value(self.get_month_index(month_name))) for month_name in calendar.month_name[1:]],  # start from index 1 to skip empty string at index 0
+                default=Value(0), output_field=IntegerField()
+            )
+        )
+
+        # Order queryset by year (descending) and month_index (descending)
+        queryset = queryset.order_by('-year', '-month_index')
+
         return queryset
 
 
