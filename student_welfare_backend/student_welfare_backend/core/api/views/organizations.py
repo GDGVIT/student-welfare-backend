@@ -89,6 +89,37 @@ class SpecialOrganizationsAPIView(APIView):
         )
 
 
+class OrganizationSubTypeAPIView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    @staticmethod
+    def get(request):
+        organization_type = request.query_params.get("type", None)
+        if organization_type is None:
+            return Response(
+                {"detail": "Please provide a type parameter"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if organization_type not in ["student_welfare", "student_council", "greviance_cell"]:
+            return Response(
+                {"detail": "Invalid type parameter"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        organizations = Organization.objects.filter(type=organization_type).values("sub_type").distinct()
+        if len(organizations) == 0:
+            return Response(
+                {"detail": "No such organizations found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        return Response(
+            {"sub_types": [organization["sub_type"] for organization in organizations]},
+            status=status.HTTP_200_OK,
+        )
+
+
 class OrganizationAdminViewSet(ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsDSW | IsADSW]

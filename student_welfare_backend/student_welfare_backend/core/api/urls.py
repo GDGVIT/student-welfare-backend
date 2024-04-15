@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 from student_welfare_backend.core.api.views.organizations import (
     OrganizationViewSet,
     SpecialOrganizationsAPIView,
+    OrganizationSubTypeAPIView,
     OrganizationAdminViewSet,
     OrganizationsListView,
     OrganizationBulkUploadView,
@@ -41,6 +42,7 @@ urlpatterns = [
     # LISTS
     path("organizations/titles/", OrganizationsListView.as_view(), name="organizations_titles"),
     path("special_organizations/", SpecialOrganizationsAPIView.as_view(), name="special_organizations"),
+    path("organization_sub_types/", OrganizationSubTypeAPIView.as_view(), name="organization_sub_types"),
     # BULK UPLOAD
     path(
         "admin/organizations/bulk_upload/",
