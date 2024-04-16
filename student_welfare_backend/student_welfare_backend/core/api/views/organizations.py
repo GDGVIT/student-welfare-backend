@@ -115,7 +115,7 @@ class OrganizationSubTypeAPIView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
         return Response(
-            {"sub_types": [organization["sub_type"] for organization in organizations]},
+            {"sub_types": [organization["sub_type"] for organization in organizations if organization["sub_type"]]},
             status=status.HTTP_200_OK,
         )
 
