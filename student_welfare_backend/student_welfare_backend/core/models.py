@@ -1,5 +1,7 @@
 import calendar
+from bs4 import BeautifulSoup
 from django.db import models
+from django.db.models import Case, When, Value, CharField
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
 
@@ -52,7 +54,25 @@ class Organization(models.Model):
 
     @property
     def members(self):
-        return UserOrganizationRelation.objects.filter(organization=self, role="member").all()
+        members_queryset = UserOrganizationRelation.objects.filter(organization=self, role="member")
+        if self.type == "student_welfare":
+             # Define custom sorting order based on positions for student welfare organization members
+            member_priority = {
+                "Director, Students' Welfare": 1,
+                # Add more positions and their priorities as needed
+            }
+
+            order_by_case = Case(
+                *[When(position=pos, then=Value(priority)) for pos, priority in member_priority.items()],
+                default=Value(999),  # Default value for any unknown positions
+                output_field=CharField()
+            )
+
+            members_queryset = members_queryset.annotate(
+                member_position_priority=order_by_case
+            ).order_by('member_position_priority')
+            
+        return members_queryset.all()
 
     def __str__(self):
         return f"{self.name}"
@@ -80,6 +100,9 @@ class UserOrganizationRelation(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="user_organization_relations")
     role = models.CharField(choices=ORGANIZATION_ROLE_CHOICES, default="member", max_length=50)
     position = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.organization.name} - {self.user.name}"
 
 
 class Event(models.Model):
@@ -132,6 +155,15 @@ class Spotlight(models.Model):
     description = models.TextField()
     time = models.DateTimeField()
     hightlight_type = models.CharField(max_length=50, choices=hightlight_type_choices, default="event")
+
+    @property
+    def sub_heading(self):
+        # Convert html to normal text
+        soup = BeautifulSoup(self.description, "html.parser")
+        return soup.get_text()[:100]
+
+    def __str__(self):
+        return f"{self.name} - {self.time}"
 
 
 class Newsletter(models.Model):

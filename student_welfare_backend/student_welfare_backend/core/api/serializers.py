@@ -71,7 +71,13 @@ class EventDetailSerializer(serializers.ModelSerializer):
 class SpotlightListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Spotlight
-        exclude = ["description"]
+        fields = [
+            "id",
+            "name",
+            "sub_heading",
+            "time",
+            "hightlight_type",
+        ]
 
 
 class SpotlightDetailSerializer(serializers.ModelSerializer):

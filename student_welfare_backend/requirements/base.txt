@@ -28,3 +28,6 @@ drf-spectacular==0.26.1  # https://github.com/tfranzel/drf-spectacular
 django-jazzmin # https://github.com/farridav/django-jazzmin
 djangorestframework_simplejwt==5.2.2 # https://github.com/jazzband/djangorestframework-simplejwt
 django-filter==23.2 # https://github.com/carltongibson/django-filter
+
+# Others
+beautifulsoup4==4.12.3
