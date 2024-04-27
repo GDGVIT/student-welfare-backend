@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from student_welfare_backend.customs.permissions import IsDSW, IsADSW
-from student_welfare_backend.core.utils.notifications import send_notification
+from student_welfare_backend.core.tasks.notifications import send_notification
 
 
 class PushNotificationView(APIView):

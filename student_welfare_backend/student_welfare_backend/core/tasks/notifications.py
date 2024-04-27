@@ -9,6 +9,9 @@ cred = credentials.Certificate("/app/credentials/firebase-key.json")
 firebase_app = firebase_admin.initialize_app(cred)
 
 
+def get_title(event: Event):
+    return f"Register for {event.name} by {event.organization.name} on VTOP now!"
+
 @app.task(name="send_notification")
 def send_notification(title, body, topic, image_url=None):
     message = messaging.Message(
@@ -20,10 +23,11 @@ def send_notification(title, body, topic, image_url=None):
 
 
 @app.task(name="send_event_notification")
-def send_event_notification(event: Event, body: str):
-    title = event.title
+def send_event_notification(event: Event):
+    title = get_title(event)
     topic = f"{event.organization.name}"
     image_url = event.poster_link
+    body = event.description
     send_notification(title, body, topic, image_url)
 
 

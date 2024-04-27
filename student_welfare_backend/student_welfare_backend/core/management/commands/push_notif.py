@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from student_welfare_backend.core.utils.notifications import send_notification
+from student_welfare_backend.core.tasks.notifications import send_notification
 
 
 class Command(BaseCommand):
