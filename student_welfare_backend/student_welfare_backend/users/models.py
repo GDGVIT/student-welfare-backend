@@ -28,6 +28,24 @@ class User(AbstractUser):
     check forms.SignupForm and forms.SocialSignupForms accordingly.
     """
 
+    school_type_choices = [
+        ("SAS", "SAS"),
+        ("SCORE", "SCORE"),
+        ("VSPARC", "V-SPARC"),
+        ("SMEC", "SMEC"),
+        ("SELECT", "SELECT"),
+        ("SCHEME", "SCHEME"),
+        ("HOT", "HOT"),
+        ("VITBS", "VIT BS"),
+        ("SCOPE", "SCOPE"),
+        ("VSIGN", "VSIGN"),
+        ("SSL", "SSL"),
+        ("SENSE", "SENSE"),
+        ("SCE", "SCE"),
+        ("SBST", "SBST"),
+        ("VAIAL", "VAIAL"),
+    ]
+    
     #: First and last name do not cover name patterns around the globe
     name = models.CharField(_("Name of User"), blank=False, max_length=255)
     email = models.EmailField(_("Email of User"), max_length=254, validators=[validate_email])
@@ -46,7 +64,8 @@ class User(AbstractUser):
     is_dsw = models.BooleanField(_("User is DSW"), default=False)
     is_adsw = models.BooleanField(_("User is ADSW"), default=False)
     office_location = models.CharField(_("Office location of the user"), blank=True, max_length=255)
-
+    school = models.CharField(_("School"), max_length=50, choices=school_type_choices,blank=True, null=True)
+    
     def get_absolute_url(self):
         """Get url for user's detail view.
 

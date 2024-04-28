@@ -9,7 +9,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-from student_welfare_backend.core.models import Organization
+from student_welfare_backend.users.models import User
+from student_welfare_backend.core.models import Organization, UserOrganizationRelation
 from student_welfare_backend.core.api.serializers import (
     OrganizationSerializer,
     OrganizationDetailSerializer,
@@ -141,7 +142,87 @@ class OrganizationAdminViewSet(ModelViewSet):
 
         return OrganizationDetailSerializer
 
+class OrganizationManageUserView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsDSW | IsADSW]
 
+    def post(self,request):
+        data = request.data
+        organization_id = data.get("organization_id", None)
+        user_email = data.get("user_email", None)
+        role = data.get("role", None)
+        position = data.get("position", None)
+
+        if None in [organization_id, user_email, role]:
+            return Response(
+                {"detail": "Please fill in all the required fields: organization_id, user_id, role"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            user_organization_relation, created = UserOrganizationRelation.objects.update_or_create(
+            user__email=user_email,
+            organization__id=organization_id,
+            defaults={
+                "role": role,
+                "position": position,
+            },
+            )
+            if created:
+                return Response(
+                    {"detail": "User added to organization successfully"},
+                    status=status.HTTP_201_CREATED,
+            )
+            else:
+                return Response(
+                    {"detail": "User already exists in the organization, updated successfully"},
+                    status=status.HTTP_200_OK,
+                )
+        except Organization.DoesNotExist:
+            return Response(
+                {"detail": "Organization not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except User.DoesNotExist:
+            return Response(
+                {"detail": "User not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+    
+    def delete(self,request):
+        data = request.data
+        organization_id = data.get("organization_id", None)
+        user_email = data.get("user_email", None)
+
+        if None in [organization_id, user_email]:
+            return Response(
+                {"detail": "Please fill in all the required fields: organization_id, user_id"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            user_organization_relation = UserOrganizationRelation.objects.get(user__email=user_email, organization__id=organization_id)
+            user_organization_relation.delete()
+            return Response(
+                {"detail": "User removed from organization successfully"},
+                status=status.HTTP_200_OK,
+            ) 
+        except Organization.DoesNotExist:
+            return Response(
+                {"detail": "Organization not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )    
+        except User.DoesNotExist:
+            return Response(
+                {"detail": "User not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )           
+        except UserOrganizationRelation.DoesNotExist:
+            return Response(
+                {"detail": "User does not exist in the organization"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+            
 class OrganizationBulkUploadView(BaseBulkUploadView):
     csv_type = "organization"
 
