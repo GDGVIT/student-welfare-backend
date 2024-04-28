@@ -9,7 +9,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-from student_welfare_backend.core.models import Organization
+from student_welfare_backend.users.models import User
+from student_welfare_backend.core.models import Organization, UserOrganizationRelation
 from student_welfare_backend.core.api.serializers import (
     OrganizationSerializer,
     OrganizationDetailSerializer,
@@ -141,7 +142,53 @@ class OrganizationAdminViewSet(ModelViewSet):
 
         return OrganizationDetailSerializer
 
+class OrganizationAddUserView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsDSW | IsADSW]
 
+    def post(self,request):
+        data = request.data
+        organization_id = data.get("organization_id", None)
+        user_email = data.get("user_email", None)
+        role = data.get("role", None)
+        position = data.get("position", None)
+
+        if organization_id is None or user_email is None or role is None:
+            return Response(
+                {"detail": "Please fill in all the required fields: organization_id, user_id, role"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            organization = Organization.objects.get(id=organization_id)
+        except Organization.DoesNotExist:
+            return Response(
+                {"detail": "Organization not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        user = User.objects.get(email=user_email)
+
+        user_organization_relation, created = UserOrganizationRelation.objects.update_or_create(
+            user=user,
+            organization=organization,
+            defaults={
+                "role": role,
+                "position": position,
+            },
+        )
+
+        if created:
+            return Response(
+                {"detail": "User added to organization successfully"},
+                status=status.HTTP_201_CREATED,
+            )
+        else:
+            return Response(
+                {"detail": "User already exists in the organization"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+            
 class OrganizationBulkUploadView(BaseBulkUploadView):
     csv_type = "organization"
 
