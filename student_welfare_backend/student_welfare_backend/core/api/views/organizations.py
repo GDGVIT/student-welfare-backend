@@ -161,14 +161,12 @@ class OrganizationManageUserView(APIView):
 
         try:
             organization = Organization.objects.get(id=organization_id)
+            user = User.objects.get(email=user_email)
         except Organization.DoesNotExist:
             return Response(
                 {"detail": "Organization not found"},
                 status=status.HTTP_404_NOT_FOUND,
             )
-
-        try:
-            user = User.objects.get(email=user_email)
         except User.DoesNotExist:
             return Response(
                 {"detail": "User not found"},
@@ -208,14 +206,12 @@ class OrganizationManageUserView(APIView):
 
         try:
             organization = Organization.objects.get(id=organization_id)
+            user = User.objects.get(email=user_email)
         except Organization.DoesNotExist:
             return Response(
                 {"detail": "Organization not found"},
                 status=status.HTTP_404_NOT_FOUND,
-            )
-
-        try:
-            user = User.objects.get(email=user_email)
+            )    
         except User.DoesNotExist:
             return Response(
                 {"detail": "User not found"},
