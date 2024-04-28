@@ -22,7 +22,7 @@ class Organization(models.Model):
         ("chapter", "Chapter"),
         ("team", "Team"),
         ("greviance_cell", "Greviance Cell"),
-        ("counseling_division", "Counseling Division"),
+        ("counselling_division", "Counselling Division"),
         ("other", "Other"),
     ]
 
