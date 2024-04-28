@@ -21,8 +21,8 @@ class Organization(models.Model):
         ("club", "Club"),
         ("chapter", "Chapter"),
         ("team", "Team"),
-        ("greviance_cell", "Greviance Cell"),
-        ("counseling_division", "Counseling Division"),
+        ("grievance_cell", "Grievance Cell"),
+        ("counselling_division", "Counselling Division"),
         ("other", "Other"),
     ]
 

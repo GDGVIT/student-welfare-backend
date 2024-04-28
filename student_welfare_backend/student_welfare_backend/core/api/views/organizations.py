@@ -48,7 +48,7 @@ class OrganizationViewSet(ReadOnlyModelViewSet):
     search_fields = ["name"]
     ordering_fields = ["name"]
     ordering = ["name"]
-    special_organization_types = ["student_welfare", "student_council", "greviance_cell", "counseling_division"]
+    special_organization_types = ["student_welfare", "student_council", "grievance_cell", "counselling_division"]
 
     def get_serializer_class(self):
         if (self.action == "list") and (
@@ -72,7 +72,7 @@ class SpecialOrganizationsAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if organization_type not in ["student_welfare", "student_council", "greviance_cell"]:
+        if organization_type not in ["student_welfare", "student_council", "grievance_cell"]:
             return Response(
                 {"detail": "Invalid type parameter"},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -103,7 +103,7 @@ class OrganizationSubTypeAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if organization_type in ["student_welfare", "student_council", "greviance_cell", "counseling_division"]:
+        if organization_type in ["student_welfare", "student_council", "grievance_cell", "counselling_division"]:
             return Response(
                 {"detail": "Special organizations type parameter not allowed"},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -132,7 +132,7 @@ class OrganizationAdminViewSet(ModelViewSet):
     search_fields = ["name"]
     ordering_fields = ["name"]
     ordering = ["name"]
-    special_organization_types = ["student_welfare", "student_council", "greviance_cell"]
+    special_organization_types = ["student_welfare", "student_council", "grievance_cell"]
 
     def get_serializer_class(self):
         if (self.action == "list") and (
