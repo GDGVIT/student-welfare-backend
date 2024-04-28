@@ -15,6 +15,7 @@ class OrganizationAdmin(admin.ModelAdmin):
         "sub_type",
     ]
     list_filter = ["type", "sub_type"]
+    search_fields = ["name", "type", "sub_type"]
 
 
 @admin.register(UserOrganizationRelation)
@@ -29,6 +30,7 @@ class UserOrganizationRelationAdmin(admin.ModelAdmin):
         "position"
     ]
     list_filter = ["role", "position"]
+    search_fields = ["user__name", "organization__name", "role", "position"]
 
 
 @admin.register(Event)
@@ -43,6 +45,7 @@ class EventAdmin(admin.ModelAdmin):
         "end_time",
     ]
     list_filter = ["organizing_body"]
+    search_fields = ["name", "organizing_body__name"]
 
 
 @admin.register(Spotlight)
@@ -56,6 +59,7 @@ class SpotlightAdmin(admin.ModelAdmin):
         "hightlight_type",
     ]
     list_filter = ["name", "hightlight_type"]
+    search_fields = ["name", "hightlight_type"]
 
 
 @admin.register(Newsletter)
@@ -69,6 +73,7 @@ class NewsletterAdmin(admin.ModelAdmin):
         "link"
     ]
     list_filter = ["year", "month"]
+    search_fields = ["year", "month"]
 
 
 @admin.register(FAQ)
@@ -81,6 +86,7 @@ class FAQAdmin(admin.ModelAdmin):
         "answer"
     ]
     search_fields = ["question", "answer"]
+    ordering = ["question"]
 
 
 @admin.register(SpecialFile)
