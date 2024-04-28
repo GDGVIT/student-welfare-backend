@@ -6,7 +6,7 @@ from student_welfare_backend.core.api.views.organizations import (
     OrganizationSubTypeAPIView,
     OrganizationAdminViewSet,
     OrganizationsListView,
-    OrganizationAddUserView,
+    OrganizationManageUserView,
     OrganizationBulkUploadView,
     OrganizationBulkDownloadView,
 )
@@ -40,7 +40,7 @@ from student_welfare_backend.core.api.views.notifications import PushNotificatio
 
 # URL PATTERNS
 urlpatterns = [
-    path("organizations/add_user/", OrganizationAddUserView.as_view(), name="organization_add_user"),
+    path("admin/organizations/manage_user/", OrganizationManageUserView.as_view(), name="organization_add_user"),
     # LISTS
     path("organizations/titles/", OrganizationsListView.as_view(), name="organizations_titles"),
     path("special_organizations/", SpecialOrganizationsAPIView.as_view(), name="special_organizations"),

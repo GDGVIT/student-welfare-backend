@@ -142,7 +142,7 @@ class OrganizationAdminViewSet(ModelViewSet):
 
         return OrganizationDetailSerializer
 
-class OrganizationAddUserView(APIView):
+class OrganizationManageUserView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsDSW | IsADSW]
 
@@ -153,7 +153,7 @@ class OrganizationAddUserView(APIView):
         role = data.get("role", None)
         position = data.get("position", None)
 
-        if organization_id is None or user_email is None or role is None:
+        if None in [organization_id, user_email, role]:
             return Response(
                 {"detail": "Please fill in all the required fields: organization_id, user_id, role"},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -167,7 +167,13 @@ class OrganizationAddUserView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        user = User.objects.get(email=user_email)
+        try:
+            user = User.objects.get(email=user_email)
+        except User.DoesNotExist:
+            return Response(
+                {"detail": "User not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
         user_organization_relation, created = UserOrganizationRelation.objects.update_or_create(
             user=user,
@@ -188,6 +194,47 @@ class OrganizationAddUserView(APIView):
                 {"detail": "User already exists in the organization"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+    
+    def delete(self,request):
+        data = request.data
+        organization_id = data.get("organization_id", None)
+        user_email = data.get("user_email", None)
+
+        if None in [organization_id, user_email]:
+            return Response(
+                {"detail": "Please fill in all the required fields: organization_id, user_id"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            organization = Organization.objects.get(id=organization_id)
+        except Organization.DoesNotExist:
+            return Response(
+                {"detail": "Organization not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        try:
+            user = User.objects.get(email=user_email)
+        except User.DoesNotExist:
+            return Response(
+                {"detail": "User not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        try:
+            user_organization_relation = UserOrganizationRelation.objects.get(user=user, organization=organization)
+        except UserOrganizationRelation.DoesNotExist:
+            return Response(
+                {"detail": "User does not exist in the organization"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        user_organization_relation.delete()
+        return Response(
+            {"detail": "User removed from organization successfully"},
+            status=status.HTTP_200_OK,
+        )
             
 class OrganizationBulkUploadView(BaseBulkUploadView):
     csv_type = "organization"
