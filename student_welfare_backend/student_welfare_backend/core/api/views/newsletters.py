@@ -15,7 +15,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from student_welfare_backend.core.models import Newsletter
 from student_welfare_backend.core.api.serializers import NewsletterSerializer
-from student_welfare_backend.customs.pagination import CustomPagination
+from student_welfare_backend.customs.pagination import CustomPagination,NewsletterPagination
 from student_welfare_backend.customs.permissions import IsDSW, IsADSW
 from student_welfare_backend.customs.views import BaseBulkUploadView, BaseBulkDownloadView
 
@@ -25,7 +25,7 @@ class NewsletterViewSet(ReadOnlyModelViewSet):
     permission_classes = []
     queryset = Newsletter.objects.all()
     serializer_class = NewsletterSerializer
-    pagination_class = CustomPagination
+    pagination_class = NewsletterPagination
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     filterset_fields = ["year", "month"]
     search_fields = ["year", "month"]
@@ -38,7 +38,6 @@ class NewsletterViewSet(ReadOnlyModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-
         # Custom sorting logic: Convert month names to numeric values
         queryset = queryset.annotate(
             month_index=Case(
@@ -49,8 +48,7 @@ class NewsletterViewSet(ReadOnlyModelViewSet):
 
         # Order queryset by year (descending) and month_index (descending)
         queryset = queryset.order_by('-year', '-month_index')
-
-        return queryset
+        return (queryset)
 
 
 class NewsletterAdminViewSet(ModelViewSet):
