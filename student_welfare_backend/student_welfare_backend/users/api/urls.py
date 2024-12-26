@@ -10,6 +10,7 @@ from student_welfare_backend.users.api.views import (
     UserAdminViewset,
     UserBulkUploadView,
     UserBulkDownloadView,
+    UpdateFCMTokenView,
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 
@@ -29,6 +30,7 @@ urlpatterns = [
     ),
     path("admin/users/bulk_upload/", UserBulkUploadView.as_view(), name="user_bulk_upload"),
     path("admin/users/bulk_download/", UserBulkDownloadView.as_view(), name="user_bulk_download"),
+    path("update_fcm_token/", UpdateFCMTokenView.as_view(), name="update_fcm_token"),
 ]
 
 # USER ADMIN

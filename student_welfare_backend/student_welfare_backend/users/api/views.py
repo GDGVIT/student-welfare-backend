@@ -48,6 +48,28 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
 
+class UpdateFCMTokenView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    @staticmethod
+    def post(request):
+        fcm_token = request.data.get("fcm_token", None)
+
+        if fcm_token == None:
+            return Response(
+                {"detail": "Please provide FCM token!"},
+                status=HTTPStatus.BAD_REQUEST,
+            )
+
+        request.user.fcm_token = fcm_token
+        request.user.save()
+
+        return Response(
+            {"detail": "FCM token updated successfully!"},
+            status=HTTPStatus.OK,
+        )
+
 class RegistrationView(APIView):
     permission_classes = []
     authentication_classes = []

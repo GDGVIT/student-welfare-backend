@@ -65,6 +65,7 @@ class User(AbstractUser):
     is_adsw = models.BooleanField(_("User is ADSW"), default=False)
     office_location = models.CharField(_("Office location of the user"), blank=True, max_length=255)
     school = models.CharField(_("School"), max_length=50, choices=school_type_choices,blank=True, null=True)
+    fcm_token = models.CharField(_("FCM Token"), max_length=255, blank=True, null=True)
     
     def get_absolute_url(self):
         """Get url for user's detail view.
