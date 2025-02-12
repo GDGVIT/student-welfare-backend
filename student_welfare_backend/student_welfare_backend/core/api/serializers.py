@@ -1,12 +1,12 @@
 from rest_framework import serializers
 
 from student_welfare_backend.core.models import (
-    Event, 
-    Organization, 
-    UserOrganizationRelation, 
-    Spotlight, 
-    Newsletter, 
-    FAQ, 
+    Event,
+    Organization,
+    UserOrganizationRelation,
+    Spotlight,
+    Newsletter,
+    FAQ,
     SpecialFile,
 )
 from student_welfare_backend.users.api.serializers import UserDetailSerializer
@@ -33,10 +33,10 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
 
 class OrganizationDetailSerializer(serializers.ModelSerializer):
-    chairperson = UserOrganizationRelationSerializer()
-    faculty_coordinator = UserOrganizationRelationSerializer()
-    board_members = UserOrganizationRelationSerializer(many=True)
-    members = UserOrganizationRelationSerializer(many=True)
+    chairperson = UserOrganizationRelationSerializer(read_only=True)
+    faculty_coordinator = UserOrganizationRelationSerializer(read_only=True)
+    board_members = UserOrganizationRelationSerializer(many=True, read_only=True)
+    members = UserOrganizationRelationSerializer(many=True, read_only=True)
 
     class Meta:
         model = Organization
