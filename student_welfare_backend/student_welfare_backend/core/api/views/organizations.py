@@ -158,11 +158,11 @@ class OrganizationManageUserView(APIView):
                 {"detail": "Please fill in all the required fields: organization_id, user_id, role"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
+        print(organization_id)
         try:
             user_organization_relation, created = UserOrganizationRelation.objects.update_or_create(
-            user__email=user_email,
             organization__id=organization_id,
+            user__email=user_email,
             defaults={
                 "role": role,
                 "position": position,
