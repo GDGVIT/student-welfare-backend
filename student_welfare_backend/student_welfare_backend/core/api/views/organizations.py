@@ -160,24 +160,8 @@ class OrganizationManageUserView(APIView):
             )
         print(organization_id)
         try:
-            user_organization_relation, created = UserOrganizationRelation.objects.update_or_create(
-            organization__id=organization_id,
-            user__email=user_email,
-            defaults={
-                "role": role,
-                "position": position,
-            },
-            )
-            if created:
-                return Response(
-                    {"detail": "User added to organization successfully"},
-                    status=status.HTTP_201_CREATED,
-            )
-            else:
-                return Response(
-                    {"detail": "User already exists in the organization, updated successfully"},
-                    status=status.HTTP_200_OK,
-                )
+            user = User.objects.get(email=user_email)
+            organization = Organization.objects.get(id=organization_id)
         except Organization.DoesNotExist:
             return Response(
                 {"detail": "Organization not found"},
@@ -187,6 +171,24 @@ class OrganizationManageUserView(APIView):
             return Response(
                 {"detail": "User not found"},
                 status=status.HTTP_404_NOT_FOUND,
+            )
+        user_organization_relation, created = UserOrganizationRelation.objects.update_or_create(
+        organization=organization,
+        user=user,
+        defaults={
+            "role": role,
+            "position": position,
+        },
+        )
+        if created:
+            return Response(
+                {"detail": "User added to organization successfully"},
+                status=status.HTTP_201_CREATED,
+        )
+        else:
+            return Response(
+                {"detail": "User already exists in the organization, updated successfully"},
+                status=status.HTTP_200_OK,
             )
     
     def delete(self,request):
